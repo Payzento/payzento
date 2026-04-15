@@ -1,6 +1,6 @@
 import { CircleCheckBig } from "lucide-react";
 import React from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 const SecurePaymentSection = () => {
   return (
@@ -48,9 +48,63 @@ const SecurePaymentSection = () => {
               Start Accepting Payment
             </Button>
           </div>
-          <div className="flex flex-1 bg-purple-100 rounded-md p-6"></div>
+          <div className="flex flex-1 bg-purple-100 rounded-2xl p-6 shadow-sm">
+            <div className="w-full flex flex-col gap-6">
+              {/* Header */}
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-gray-600 text-sm">Merchant Dashboard</p>
+                  <h1 className="text-3xl font-medium text-gray-900 mt-2">
+                    ₦2,850,000
+                  </h1>
+                  <p className="text-gray-500 text-sm mt-1">
+                    Total Sales This Month
+                  </p>
+                </div>
+
+                {/* Icon */}
+                <div className="text-green-500 text-xl">↗</div>
+              </div>
+
+              {/* Bottom Cards */}
+              <div className="grid grid-cols-2 gap-4">
+                {/* Pending */}
+                <div className="bg-white/60 rounded-xl p-4">
+                  <p className="text-gray-600 text-sm">Pending</p>
+                  <p className="text-yellow-500 font-medium text-lg mt-1">
+                    ₦200K
+                  </p>
+                </div>
+
+                {/* Available */}
+                <div className="bg-white/60 rounded-xl p-4">
+                  <p className="text-gray-600 text-sm">Available</p>
+                  <p className="text-green-500 font-medium text-lg mt-1">
+                    ₦1.2M
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+         <div className="max-w-5xl mx-auto flex items-center justify-between gap-4 my-10">
+        <div className="flex flex-col gap-2 text-center">
+          <h1 className="text-3xl text-blue-500">#2.5B+</h1>
+          <p>Secured safely</p>
+        </div>
+        <div className="flex flex-col gap-2 text-center">
+          <h1 className="text-3xl text-blue-500">50,000+</h1>
+          <p>Successful Transactions</p>
+        </div>
+        <div className="flex flex-col gap-2 text-center">
+          <h1 className="text-3xl text-blue-500">99.9%</h1>
+          <p>Satisfaction Rate</p>
         </div>
       </div>
+      </div>
+
+     
     </div>
   );
 };

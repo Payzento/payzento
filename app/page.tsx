@@ -1,9 +1,19 @@
 import Nav from "@/components/Nav";
 import ReusableSections from "@/components/ReusableSections";
-import SecurePaymentSection from "@/components/SecurePayment";
+import FAQSection from "@/components/getting-started/FaqSection";
+import SecurePaymentSection from "@/components/getting-started/SecurePayment";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Lock, LockKeyhole, MoveRight, Shield, Users, CircleCheckBig, TrendingUp, FileCheck } from "lucide-react";
+import {
+  Lock,
+  LockKeyhole,
+  MoveRight,
+  Shield,
+  Users,
+  CircleCheckBig,
+  TrendingUp,
+  FileCheck,
+} from "lucide-react";
 
 export default function Home() {
   return (
@@ -79,20 +89,23 @@ export default function Home() {
               {
                 cardIcon: <Shield className="w-6 h-6 text-blue-500" />,
                 cardTitle: "1. Create Transactiont",
-                cardDescription: "Enter the amount and add the seller. Your money is safe from the start.",
-                className: "bg-blue-300/20"
+                cardDescription:
+                  "Enter the amount and add the seller. Your money is safe from the start.",
+                className: "bg-blue-300/20",
               },
               {
                 cardIcon: <Lock className="w-6 h-6 text-orange-500" />,
                 cardTitle: "2. Funds Held Securely",
-                cardDescription: "Payment is locked in escrow. Seller can't access it until you approve.",
-                className: "bg-yellow-300/20"
+                cardDescription:
+                  "Payment is locked in escrow. Seller can't access it until you approve.",
+                className: "bg-yellow-300/20",
               },
-                {
+              {
                 cardIcon: <CircleCheckBig className="w-6 h-6 text-green-500" />,
                 cardTitle: "3. You Control Release",
-                cardDescription: "Once you confirm delivery, payment is released. You're always in control.",
-                className: "bg-green-300/20"
+                cardDescription:
+                  "Once you confirm delivery, payment is released. You're always in control.",
+                className: "bg-green-300/20",
               },
             ]}
           />
@@ -102,32 +115,60 @@ export default function Home() {
       <div className="bg-gray-50">
         <div className="w-full max-w-7xl mx-auto py-10 px-4">
           <ReusableSections
-          header="Perfect For Every Transaction"
-          description="Whether you're hiring freelancers, buying from vendors, or selling services"
-          cards={[
-            {
-              cardIcon: <Users className="w-7 h-7 text-blue-500" />,
-              cardTitle: "Freelancers & Buyers",
-              cardDescription: "Pay for work only when satisfied.",
-              className1: "bg-white",
-            },
-            {
-              cardIcon: <TrendingUp className="w-7 h-7 text-blue-500" />,
-              cardTitle: "Online Vendors",
-              cardDescription: "Sell safely with guaranteed payment",
-              className1: "bg-white",
-            },
-            {
-              cardIcon: <FileCheck className="w-7 h-7 text-blue-500" />,
-              cardTitle: "Service Providers",
-              cardDescription: "Secure payments for both parties",
-              className1: "bg-white",
-            },
-          ]}
+            header="Perfect For Every Transaction"
+            description="Whether you're hiring freelancers, buying from vendors, or selling services"
+            cards={[
+              {
+                cardIcon: <Users className="w-7 h-7 text-blue-500" />,
+                cardTitle: "Freelancers & Buyers",
+                cardDescription: "Pay for work only when satisfied.",
+                className1: "bg-white",
+              },
+              {
+                cardIcon: <TrendingUp className="w-7 h-7 text-blue-500" />,
+                cardTitle: "Online Vendors",
+                cardDescription: "Sell safely with guaranteed payment",
+                className1: "bg-white",
+              },
+              {
+                cardIcon: <FileCheck className="w-7 h-7 text-blue-500" />,
+                cardTitle: "Service Providers",
+                cardDescription: "Secure payments for both parties",
+                className1: "bg-white",
+              },
+            ]}
           />
         </div>
       </div>
       <SecurePaymentSection />
+      <FAQSection />
+
+      <div className="bg-blue-500 flex flex-col items-center justify-center py-8 px-4">
+        <div className="text-center ">
+          <h1 className="text-3xl font-bold text-white">
+            Ready to Send Money Safely
+          </h1>
+          <p className="text-gray-300">
+            Join thousands of users who trust Payzento for secure transactions
+          </p>
+          <div className="flex items-center justify-center gap-4">
+            <Button className="bg-white hover:shadow-lg text-[20px] text-blue-500 rounded-xl p-7 cursor-pointer font-semibold mt-4">
+              Get Started as Buyer
+            </Button>
+            <Button className="bg-blue-500/50 text-white hover:shadow-lg text-[20px] border border-white rounded-xl p-7 cursor-pointer font-semibold mt-4">
+              Start as Merchant
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div className="bg-gray-800 text-white py-10 px-4">
+          <div className="w-full max-w-7xl mx-auto">
+            <p className="text-center">© 2023 Payzento. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </>
   );
 }
