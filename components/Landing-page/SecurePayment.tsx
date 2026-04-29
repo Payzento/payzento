@@ -1,33 +1,33 @@
-import { CircleCheckBig } from "lucide-react";
+import { CircleCheckBig, TrendingUp } from "lucide-react";
 import React from "react";
 import { Button } from "../ui/button";
 
 const SecurePaymentSection = () => {
   return (
-    <div className="w-full bg-white">
+    <div className="w-full ">
       <div className="w-full max-w-7xl mx-auto py-15 px-4">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex flex-col items-start flex-1">
-            <h1 className="text-xl md:text-3xl font-semibold mb-5">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
+          <div className="w-full md:flex-1 flex flex-col items-start ">
+            <h1 className="text-lg md:text-[27px] font-semibold mb-5">
               Accept Secure Payments on Your Platform
             </h1>
-            <p className="text-sm md:text-lg text-gray-500">
+            <p className="text-sm md:text-[15px] text-gray-500">
               Add Payzento checkout to your website and start receiving secure
               escrow payments. Protect both you and your customers.
             </p>
             <div className="flex flex-col items-start gap-2 my-6">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 mb-2">
                 <CircleCheckBig className="text-green-300 w-5 h-5" />
-                <p className="text-lg font-bold">
+                <p className="text-[15px] font-bold">
                   Payment is secured before you deliver{" "}
                   <span className="text-gray-400 font-normal">
                     — No risk of fake payment alerts
                   </span>
                 </p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 mb-2">
                 <CircleCheckBig className="text-green-300 w-5 h-5" />
-                <p className="text-lg font-bold">
+                <p className="text-[15px] font-bold">
                   Funds are guaranteed{" "}
                   <span className="text-gray-400 font-normal">
                     — Once delivery is confirmed, payment is yours
@@ -36,19 +36,19 @@ const SecurePaymentSection = () => {
               </div>
               <div className="flex items-center gap-2">
                 <CircleCheckBig className="text-green-300 w-5 h-5" />
-                <p className="text-lg font-bold">
-                  Easy integration — Add to your site in minutes{" "}
+                <p className="text-[15px] font-bold">
+                  Easy integration{" "}
                   <span className="text-gray-400 font-normal">
                     — Add to your site in minutes
                   </span>
                 </p>
               </div>
             </div>
-            <Button className="bg-blue-600 hover:shadow-2xl rounded-xl py-6 px-8 text-lg text-white font-semibold">
+            <Button className="bg-blue-600 hover:shadow-2xl shadow-2xl rounded-xl py-6 px-8 text-[15px] text-white font-semibold">
               Start Accepting Payment
             </Button>
           </div>
-          <div className="flex flex-1 bg-purple-100 rounded-2xl p-6 shadow-sm">
+          <div className="flex w-full md:flex-1 bg-[#f2f6ff] rounded-2xl p-15 shadow-sm">
             <div className="w-full flex flex-col gap-6">
               {/* Header */}
               <div className="flex items-start justify-between">
@@ -63,7 +63,9 @@ const SecurePaymentSection = () => {
                 </div>
 
                 {/* Icon */}
-                <div className="text-green-500 text-xl">↗</div>
+                <div className="text-green-500 text-xl">
+                  <TrendingUp />
+                </div>
               </div>
 
               {/* Bottom Cards */}
@@ -88,23 +90,21 @@ const SecurePaymentSection = () => {
           </div>
         </div>
 
-         <div className="max-w-5xl mx-auto flex items-center justify-between gap-4 my-10">
-        <div className="flex flex-col gap-2 text-center">
-          <h1 className="text-3xl text-blue-500">#2.5B+</h1>
-          <p>Secured safely</p>
-        </div>
-        <div className="flex flex-col gap-2 text-center">
-          <h1 className="text-3xl text-blue-500">50,000+</h1>
-          <p>Successful Transactions</p>
-        </div>
-        <div className="flex flex-col gap-2 text-center">
-          <h1 className="text-3xl text-blue-500">99.9%</h1>
-          <p>Satisfaction Rate</p>
+        <div className="max-w-5xl mx-auto flex items-center justify-between gap-4 mt-30">
+          <div className="flex flex-col gap-2 text-center">
+            <h1 className="text-3xl text-blue-500">#2.5B+</h1>
+            <p>Secured safely</p>
+          </div>
+          <div className="flex flex-col gap-2 text-center">
+            <h1 className="text-3xl text-blue-500">50,000+</h1>
+            <p>Successful Transactions</p>
+          </div>
+          <div className="flex flex-col gap-2 text-center">
+            <h1 className="text-3xl text-blue-500">99.9%</h1>
+            <p>Satisfaction Rate</p>
+          </div>
         </div>
       </div>
-      </div>
-
-     
     </div>
   );
 };

@@ -1,9 +1,10 @@
+import GettingStarted from '@/components/Getting-started/GettingStarted'
 import React from 'react'
 
 const GettingStartedPage = () => {
   return (
-    <div>
-      getting started page
+    <div >
+      <GettingStarted  />
     </div>
   )
 }

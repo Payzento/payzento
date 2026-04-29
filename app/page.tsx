@@ -1,7 +1,7 @@
 import Nav from "@/components/Nav";
 import ReusableSections from "@/components/ReusableSections";
-import FAQSection from "@/components/getting-started/FaqSection";
-import SecurePaymentSection from "@/components/getting-started/SecurePayment";
+import FAQSection from "@/components/Landing-page/FaqSection";
+import SecurePaymentSection from "@/components/Landing-page/SecurePayment";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -14,6 +14,7 @@ import {
   TrendingUp,
   FileCheck,
 } from "lucide-react";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -29,9 +30,12 @@ export default function Home() {
             zero risk.
           </p>
           <div className="flex items-center gap-2 md:gap-4 my-4 px-2">
+            <Link href="/getting-started">
             <Button className="bg-blue-600 hover:shadow-lg text-white rounded-xl p-7 cursor-pointer font-semibold">
               Start Secure Transaction
             </Button>
+            </Link>
+            
             <Button className="bg-white hover:border-blue-500 border border-gray-300 text-black rounded-xl p-7 cursor-pointer font-semibold">
               Create Free Account
             </Button>
