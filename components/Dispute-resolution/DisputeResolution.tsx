@@ -1,17 +1,23 @@
 import React from "react";
 import Nav from "../Nav";
-import { MoveLeft, TriangleAlert, Upload } from "lucide-react";
+import { MoveLeft, Search, TriangleAlert} from "lucide-react";
+import FileUploader from "../FileUploader";
+import Link from "next/link";
+import DisputeChat from "./DisputeChat";
 
 const DisputeResolution = () => {
   return (
     <div>
       <Nav />
 
-      <section className="max-w-3xl mx-auto px-4 mt-25 space-y-4 my-2">
-        <p className="flex items-center gap-2 mb-5">
+      <section className="max-w-3xl mx-auto px-4 mt-25 space-y-4 my-5">
+        <Link
+          href="/review-funds"
+          className="flex items-center gap-2 mb-5 cursor-pointer"
+        >
           <MoveLeft />
           Back to Transaction
-        </p>
+        </Link>
 
         <p className="text-2xl font-semibold">Dispute Resolution</p>
 
@@ -25,7 +31,7 @@ const DisputeResolution = () => {
           </p>
         </section>
 
-        <section className="bg-white border border-gray-300 p-6 rounded-xl">
+        <section className="bg-white border border-gray-300 shadow shadow-gray-300 p-6 rounded-xl">
           <p className="font-semibold text-lg">Dispute Information</p>
 
           <div className="my-3">
@@ -44,13 +50,24 @@ const DisputeResolution = () => {
             <p className="text-gray-400 text-sm font-semibold mb-2">
               Upload Evidence
             </p>
-            <button className="w-full flex items-center justify-center gap-2 text-gray-400 border-2 border-dashed border-gray-400 hover:border-blue-400 p-4 rounded-lg">
-              <Upload className="w-5 h-5" />
-              <p className="">Upload files (images, documents)
-                <input type="file" />
-              </p>
-            </button>
+            <FileUploader />
           </div>
+        </section>
+
+        <section>
+          <DisputeChat />
+        </section>
+
+        <section className="w-full flex flex-col items-center justify-center border-2 shadow shadow-[#bedbff] p-6 rounded-xl">
+          <div className="flex items-center gap-2">
+            <Search className="w-4 h-4" fill="blue" />
+            {/* <SearchIcon /> */}
+            <p className="text-sm font-semibold">Under Review</p>
+          </div>
+          <p className="text-gray-400 text-sm">
+            Our team is reviewing this dispute. Funds will remain locked until
+            resolved.
+          </p>
         </section>
       </section>
     </div>

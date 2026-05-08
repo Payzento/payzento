@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import Nav from "@/components/Nav";
 import {
   Card,
@@ -18,9 +18,6 @@ import {
   Wallet,
 } from "lucide-react";
 import Link from "next/link";
-
-
-
 
 type StatusType = "HELD" | "RELEASED" | "COMPLETED";
 
@@ -53,7 +50,6 @@ const statusConfig: Record<
   },
 };
 
-
 type StatusItem = {
   icon: React.ElementType;
   stat: StatusType;
@@ -66,7 +62,6 @@ type TransactionProps = {
   purchase: string;
   date: string;
 };
-
 
 const transactionsCard: TransactionProps[] = [
   {
@@ -119,10 +114,9 @@ const transactionsCard: TransactionProps[] = [
   },
 ];
 
-
 const Dashboard = () => {
   return (
-   <div>
+    <div>
       <Nav />
       <div className="mt-20 max-w-7xl mx-auto px-2 pt-4">
         <div className="flex flex-col md:flex-row gap-4 ">
@@ -137,9 +131,11 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent className="">
               <p className="text-3xl">₦1,245,000</p>
-              <button className="bg-white hover:border-2 hover:border-blue-400 rounded-xl px-4 py-2 text-black font-semibold mt-5 cursor-pointer">
-                Withdraw
-              </button>
+              <Link href="/dashboard/withdraw">
+                <button className="bg-white hover:border-2 hover:border-blue-400 rounded-xl px-4 py-2 text-black font-semibold mt-5 cursor-pointer">
+                  Withdraw
+                </button>
+              </Link>
             </CardContent>
           </Card>
 
@@ -157,10 +153,13 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        <button className="my-6 bg-[#1e51da] px-6 py-4 rounded-xl flex items-center gap-2 text-white cursor-pointer hover:shadow-xl">
+        <Link
+          href="new-transaction"
+          className="my-6 w-fit bg-[#1e51da] px-6 py-4 rounded-xl flex items-center gap-2 text-white cursor-pointer hover:shadow-xl"
+        >
           <Plus />
           Start New Transaction
-        </button>
+        </Link>
       </div>
 
       <div className="w-full flex flex-col max-w-7xl mx-auto p-4">
@@ -176,7 +175,11 @@ const Dashboard = () => {
         <div className="flex flex-col">
           {transactionsCard.map((card, index) => {
             return (
-              <Link href="review-funds" key={index} className="cursor-pointer my-2">
+              <Link
+                href="review-funds"
+                key={index}
+                className="cursor-pointer my-2"
+              >
                 <Card className="w-full flex-1 text-white px-4 py-6 hover:shadow-lg">
                   <CardHeader className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 text-white">
@@ -230,7 +233,9 @@ const Dashboard = () => {
                 Wallet
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-0 text-gray-500">Manage your funds</CardContent>
+            <CardContent className="p-0 text-gray-500">
+              Manage your funds
+            </CardContent>
           </Card>
           <Card className="col-span-1 text-center hover:shadow-xl cursor-pointer">
             <CardHeader className="p-0">
@@ -241,7 +246,9 @@ const Dashboard = () => {
                 Active Escrows
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-0 text-gray-500">View locked transactions</CardContent>
+            <CardContent className="p-0 text-gray-500">
+              View locked transactions
+            </CardContent>
           </Card>
           <Card className="col-span-1 text-center hover:shadow-xl cursor-pointer">
             <CardHeader className="p-0">
@@ -252,12 +259,14 @@ const Dashboard = () => {
                 Reports
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-0 text-gray-500">Transaction history</CardContent>
+            <CardContent className="p-0 text-gray-500">
+              Transaction history
+            </CardContent>
           </Card>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

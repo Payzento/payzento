@@ -31,14 +31,16 @@ export default function Home() {
           </p>
           <div className="flex items-center gap-2 md:gap-4 my-4 px-2">
             <Link href="/getting-started">
-            <Button className="bg-blue-600 hover:shadow-lg text-white rounded-xl p-7 cursor-pointer font-semibold">
-              Start Secure Transaction
-            </Button>
+              <Button className="bg-[#1e50d9] hover:shadow-lg text-white rounded-xl p-7 cursor-pointer font-semibold">
+                Start Secure Transaction
+              </Button>
             </Link>
-            
-            <Button className="bg-white hover:border-blue-500 border border-gray-300 text-black rounded-xl p-7 cursor-pointer font-semibold">
-              Create Free Account
-            </Button>
+
+            <Link href="/getting-started">
+              <Button className="bg-white border-2 border-gray-300 hover:border-[#1e50d9]  text-black rounded-xl p-7 cursor-pointer font-semibold">
+                Create Free Account
+              </Button>
+            </Link>
           </div>
           <div className="w-full flex items-center justify-center mt-10">
             <Card className="bg-gray-100 w-full max-w-4xl py-10">
@@ -56,8 +58,8 @@ export default function Home() {
                 </div>
 
                 <div className="flex flex-col items-center gap-2">
-                  <div className="rounded-full bg-orange-400 w-20 h-20 flex flex-col items-center justify-center">
-                    <LockKeyhole className="w-8 h-8 text-white" />
+                  <div className="rounded-full bg-orange-400 w-18 h-18 flex flex-col items-center justify-center scale-3d animate-pulse">
+                    <Lock className="w-8 h-8 text-white scale-75" />
                   </div>
                   <p>Payzento</p>
                 </div>
@@ -74,9 +76,10 @@ export default function Home() {
                   <p>Seller</p>
                 </div>
               </CardContent>
-              <div className="flex items-center justify-center gap-2 -mt-10">
+              <div className="flex items-center justify-center gap-2 -mt-10 text-orange-400">
                 {" "}
-                <p className="text-orange-400">LOCKED</p>
+                <LockKeyhole className="w-3.5 h-3.5" />
+                <p className="">LOCKED</p>
               </div>
             </Card>
           </div>
@@ -147,19 +150,19 @@ export default function Home() {
       <SecurePaymentSection />
       <FAQSection />
 
-      <div className="bg-blue-500 flex flex-col items-center justify-center py-8 px-4">
+      <div className="bg-[#1f54de] flex flex-col items-center justify-center py-20 px-4">
         <div className="text-center ">
-          <h1 className="text-3xl font-bold text-white">
+          <h1 className="text-3xl font-semibold text-white mb-3">
             Ready to Send Money Safely
           </h1>
           <p className="text-gray-300">
             Join thousands of users who trust Payzento for secure transactions
           </p>
           <div className="flex items-center justify-center gap-4">
-            <Button className="bg-white hover:shadow-lg text-[20px] text-blue-500 rounded-xl p-7 cursor-pointer font-semibold mt-4">
+            <Button className="bg-white hover:shadow-lg  hover:border hover:border-[#1f54de] text-[15px] text-black rounded-xl p-7 cursor-pointer font-semibold mt-4">
               Get Started as Buyer
             </Button>
-            <Button className="bg-blue-500/50 text-white hover:shadow-lg text-[20px] border border-white rounded-xl p-7 cursor-pointer font-semibold mt-4">
+            <Button className="bg-blue-500/50 text-white hover:shadow-lg text-[15px] border border-gray-400 rounded-xl p-7 cursor-pointer font-semibold mt-4">
               Start as Merchant
             </Button>
           </div>

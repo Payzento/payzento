@@ -44,7 +44,7 @@ const SecurePaymentSection = () => {
                 </p>
               </div>
             </div>
-            <Button className="bg-blue-600 hover:shadow-2xl shadow-2xl rounded-xl py-6 px-8 text-[15px] text-white font-semibold">
+            <Button className="bg-[#1e50da] hover:shadow-2xl shadow-2xl rounded-xl py-6 px-8 text-[15px] text-white font-semibold">
               Start Accepting Payment
             </Button>
           </div>
@@ -92,15 +92,15 @@ const SecurePaymentSection = () => {
 
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-4 mt-30">
           <div className="flex flex-col gap-2 text-center">
-            <h1 className="text-3xl text-blue-500">#2.5B+</h1>
+            <h1 className="text-3xl text-[#4369eb]">₦2.5B+</h1>
             <p>Secured safely</p>
           </div>
           <div className="flex flex-col gap-2 text-center">
-            <h1 className="text-3xl text-blue-500">50,000+</h1>
+            <h1 className="text-3xl text-[#4369eb]">50,000+</h1>
             <p>Successful Transactions</p>
           </div>
           <div className="flex flex-col gap-2 text-center">
-            <h1 className="text-3xl text-blue-500">99.9%</h1>
+            <h1 className="text-3xl text-[#4369eb]">99.9%</h1>
             <p>Satisfaction Rate</p>
           </div>
         </div>

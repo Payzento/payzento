@@ -26,14 +26,14 @@ const ReusableSections = ({
     <div>
       <div className="flex flex-col items-center justify-center gap-3">
         <h1 className="text-xl md:text-3xl font-semibold">{header}</h1>
-        <p className="text-sm md:text-xl text-gray-400 mb-5">{description}</p>
+        <p className="text-sm text-gray-400 mb-5">{description}</p>
       </div>
 
       <div className={cn("flex flex-col md:flex-row items-center justify-between gap-2 mt-6", className)}>
         {cards.map((card, index) => (
           <div
             key={index}
-            className={cn("w-full md:w-[32%] flex flex-col items-center justify-center gap-2 border border-gray-300 p-4 rounded-lg hover:shadow-lg transition-shadow duration-300", card.className1)}
+            className={cn("w-full md:w-[32%] flex flex-col items-center justify-center gap-2 border border-gray-300 py-4 px-8  rounded-lg hover:shadow-lg transition-shadow duration-300", card.className1)}
           >
             <div
               className={cn(
@@ -43,7 +43,7 @@ const ReusableSections = ({
               {card.cardIcon}
             </div>
             <h2 className="text-lg font-bold mt-2">{card.cardTitle}</h2>
-            <p className="text-gray-400 text-center mt-1">{card.cardDescription}</p>
+            <p className="text-gray-500 text-sm text-center font-light mt-1">{card.cardDescription}</p>
           </div>
         ))}
       </div>

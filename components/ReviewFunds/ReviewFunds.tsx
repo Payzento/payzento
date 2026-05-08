@@ -50,7 +50,10 @@ const ReviewFunds = () => {
     <>
       <Nav />
       <div className="max-w-3xl mx-auto px-4 mt-25 space-y-4 my-2">
-        <Link href="/dashboard" className="flex items-center gap-2 text-[#6b7ea0] hover:text-black cursor-pointer my-5">
+        <Link
+          href="/dashboard"
+          className="flex items-center gap-2 text-[#6b7ea0] hover:text-black cursor-pointer my-5"
+        >
           <ArrowLeft />
           Back to Dashboard
         </Link>
@@ -166,7 +169,10 @@ const ReviewFunds = () => {
         </section>
 
         <section className="hover:bg-red-50 rounded-xl p-4">
-          <Link href="/dispute-resolution" className="flex items-center justify-center gap-2 text-[#f04444]">
+          <Link
+            href="/dispute-resolution"
+            className="flex items-center justify-center gap-2 text-[#f04444]"
+          >
             <TriangleAlert className="w-4 h-4" />
             <p className="">Open Dispute</p>
           </Link>
