@@ -10,10 +10,10 @@ interface CardItem {
 }
 
 interface ReusableSectionProps {
-  header: string;
+  header?: string;
   description?: string;
   className?: string;
-  cards: CardItem[];
+  cards?: CardItem[];
 }
 
 const ReusableSections = ({
@@ -30,7 +30,7 @@ const ReusableSections = ({
       </div>
 
       <div className={cn("flex flex-col md:flex-row items-center justify-between gap-2 mt-6", className)}>
-        {cards.map((card, index) => (
+        {cards?.map((card, index) => (
           <div
             key={index}
             className={cn("w-full md:w-[32%] flex flex-col items-center justify-center gap-2 border border-gray-300 py-4 px-8  rounded-lg hover:shadow-lg transition-shadow duration-300", card.className1)}

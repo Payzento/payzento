@@ -12,6 +12,7 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import Link from "next/link";
+import TransactionProgress from "../TransactionProgress";
 
 type DetailsProps = {
   details1: string;
@@ -74,8 +75,9 @@ const ReviewFunds = () => {
 
         {/* FUNDS PROGRESS */}
 
-        <section className="border border-gray-300 p-6 rounded-xl ">
-          <p className="font-semibold">Transaction Progress</p>
+        <TransactionProgress />
+        {/* <section className="border border-gray-300 p-6 rounded-xl ">
+          <p className="font-medium">Transaction Progress</p>
 
           <div className="mt-12 -mb-7 w-full">
             <div className="w-full">
@@ -118,7 +120,7 @@ const ReviewFunds = () => {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* TRANSACTION DETAILS */}
 

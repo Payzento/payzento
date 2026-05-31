@@ -159,12 +159,17 @@ export default function Home() {
             Join thousands of users who trust Payzento for secure transactions
           </p>
           <div className="flex items-center justify-center gap-4">
-            <Button className="bg-white hover:shadow-lg  hover:border hover:border-[#1f54de] text-[15px] text-black rounded-xl p-7 cursor-pointer font-semibold mt-4">
-              Get Started as Buyer
-            </Button>
-            <Button className="bg-blue-500/50 text-white hover:shadow-lg text-[15px] border border-gray-400 rounded-xl p-7 cursor-pointer font-semibold mt-4">
-              Start as Merchant
-            </Button>
+            <Link href="/getting-started">
+              <Button className="bg-white hover:shadow-lg  hover:border hover:border-[#1f54de] text-[15px] text-black rounded-xl p-7 cursor-pointer font-semibold mt-4">
+                Get Started as Buyer
+              </Button>
+            </Link>
+
+            <Link href="/merchant-page">
+              <Button className="bg-blue-500/50 text-white hover:shadow-lg text-[15px] border border-gray-400 rounded-xl p-7 cursor-pointer font-semibold mt-4">
+                Start as Merchant
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

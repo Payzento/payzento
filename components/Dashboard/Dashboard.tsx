@@ -21,15 +21,7 @@ import Link from "next/link";
 
 type StatusType = "HELD" | "RELEASED" | "COMPLETED";
 
-const statusConfig: Record<
-  StatusType,
-  {
-    icon: React.ElementType;
-    bg: string;
-    border: string;
-    text: string;
-  }
-> = {
+const statusConfig: Record<StatusType, { icon: React.ElementType; bg: string; border: string; text: string; } > = {
   HELD: {
     icon: LockIcon,
     bg: "bg-red-200",

@@ -8,7 +8,6 @@ import {
   Lock,
   Wallet,
 } from "lucide-react";
-import TransactionHistory from "./TransactionHistory";
 import TransactionList from "./TransactionHistory";
 
 // type TransactionProps = {

@@ -1,13 +1,14 @@
 import { Bell, User } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 const Nav = () => {
   return (
     <div className="w-full fixed top-0 left-0 border-b border-b-gray-100 bg-white shadow-xs z-50">
       <div className="w-full flex items-center justify-between max-w-7xl mx-auto p-4">
-        <div className="">
+        <Link href="/" className="">
           <h1 className="text-2xl">Payzento</h1>
-        </div>
+        </Link>
         <div className="flex items-center gap-4">
           <Bell />
           <User />

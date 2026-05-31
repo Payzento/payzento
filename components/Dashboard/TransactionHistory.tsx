@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  ArrowDown,
-  ArrowDownFromLine,
-  ArrowDownToLine,
-  ArrowUp,
-  ArrowUpFromLine,
-  LockKeyhole,
-} from "lucide-react";
+import { ArrowDownToLine, ArrowUpFromLine, LockKeyhole } from "lucide-react";
 
 type TransactionProps = {
   id: number;
