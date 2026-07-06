@@ -45,3 +45,11 @@ export async function updateWalletBalance(userId: string, available: number, loc
   }
   return data;
 }
+
+export async function addTestFunds(userId: string, amountKobo: number) {
+  const currentWallet = await getOrCreateWallet(userId);
+  const newAvailable = Number(currentWallet.available_balance || 0) + amountKobo;
+  const newLocked = Number(currentWallet.locked_balance || 0);
+
+  return updateWalletBalance(userId, newAvailable, newLocked);
+}

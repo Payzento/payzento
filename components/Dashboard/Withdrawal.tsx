@@ -9,13 +9,31 @@ import { motion } from "framer-motion";
 import PageWrapper from "@/components/PageWrapper";
 import { scaleIn, staggerContainer, staggerItem } from "@/lib/animations";
 import { useAuth } from "@/context/AuthContext";
-import { getOrCreateWallet } from "@/lib/services/wallet.service";
+import { getOrCreateWallet, addTestFunds } from "@/lib/services/wallet.service";
 import { createClient } from "@/lib/supabase/client";
+import { Loader2 } from "lucide-react";
 
 const Withdrawal = () => {
   const { user } = useAuth();
   const [wallet, setWallet] = useState<{ available_balance: number; locked_balance: number } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isFunding, setIsFunding] = useState(false);
+  const [fundSuccess, setFundSuccess] = useState(false);
+
+  const handleAddTestFunds = async () => {
+    if (!user) return;
+    setIsFunding(true);
+    try {
+      // Add ₦50,000 (5,000,000 kobo)
+      await addTestFunds(user.id, 5000000);
+      setFundSuccess(true);
+      setTimeout(() => setFundSuccess(false), 2000);
+    } catch (err) {
+      console.error("Error adding test funds:", err);
+    } finally {
+      setIsFunding(false);
+    }
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -127,12 +145,18 @@ const Withdrawal = () => {
                     Withdraw to Bank
                   </motion.button>
                   <motion.button
-                    className="bg-slate-800/80 border border-slate-700/60 hover:bg-slate-800 text-white flex flex-1 w-full items-center justify-center text-xs font-bold gap-2 rounded-xl p-3 cursor-pointer transition-colors"
+                    onClick={handleAddTestFunds}
+                    disabled={isFunding}
+                    className="bg-slate-800/80 border border-slate-700/60 hover:bg-slate-800 text-white flex flex-1 w-full items-center justify-center text-xs font-bold gap-2 rounded-xl p-3 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.97 }}
                   >
-                    <ArrowDownToLine className="w-4 h-4" />
-                    Deposit Funds
+                    {isFunding ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <ArrowDownToLine className="w-4 h-4" />
+                    )}
+                    {fundSuccess ? "Funds Added!" : "Deposit Funds (Faucet)"}
                   </motion.button>
                 </div>
               </div>
