@@ -4,85 +4,96 @@ import { Button } from "../ui/button";
 
 const SecurePaymentSection = () => {
   return (
-    <div className="w-full ">
-      <div className="w-full max-w-7xl mx-auto py-15 px-4">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
-          <div className="w-full md:flex-1 flex flex-col items-start ">
-            <h1 className="text-lg md:text-[27px] font-semibold mb-5">
+    <div className="w-full bg-background border-t border-border transition-colors duration-300">
+      <div className="w-full max-w-7xl mx-auto py-24 px-4">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
+          <div className="w-full lg:flex-1 flex flex-col items-start">
+            <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-semibold mb-4">
+              DEVELOPER & API INTEGRATION
+            </div>
+            <h1 className="text-2xl md:text-[36px] font-bold tracking-tight text-foreground leading-tight mb-5">
               Accept Secure Payments on Your Platform
             </h1>
-            <p className="text-sm md:text-[15px] text-gray-500">
-              Add Payzento checkout to your website and start receiving secure
-              escrow payments. Protect both you and your customers.
+            <p className="text-muted-foreground leading-relaxed max-w-lg mb-8">
+              Easily add Payzento checkout to your website or platform using our robust JavaScript integration. 
+              Protect your business and offer customer confidence in just a few lines of code.
             </p>
-            <div className="flex flex-col items-start gap-2 my-6">
-              <div className="flex items-center gap-2 mb-2">
-                <CircleCheckBig className="text-green-300 w-5 h-5" />
-                <p className="text-[15px] font-bold">
-                  Payment is secured before you deliver{" "}
-                  <span className="text-gray-400 font-normal">
-                    — No risk of fake payment alerts
-                  </span>
-                </p>
+            <div className="flex flex-col items-start gap-4 mb-8 w-full max-w-md">
+              <div className="flex items-start gap-3">
+                <div className="mt-1 p-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
+                  <CircleCheckBig className="text-emerald-500 w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-[15px] font-semibold text-foreground">
+                    Payment secured first
+                  </p>
+                  <p className="text-muted-foreground text-xs mt-0.5">
+                    No risk of fraud, fake alerts, or sudden chargebacks.
+                  </p>
+                </div>
               </div>
-              <div className="flex items-center gap-2 mb-2">
-                <CircleCheckBig className="text-green-300 w-5 h-5" />
-                <p className="text-[15px] font-bold">
-                  Funds are guaranteed{" "}
-                  <span className="text-gray-400 font-normal">
-                    — Once delivery is confirmed, payment is yours
-                  </span>
-                </p>
+              <div className="flex items-start gap-3">
+                <div className="mt-1 p-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
+                  <CircleCheckBig className="text-emerald-500 w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-[15px] font-semibold text-foreground">
+                    Guaranteed seller payouts
+                  </p>
+                  <p className="text-muted-foreground text-xs mt-0.5">
+                    Funds are secure in escrow, ready to release upon milestone delivery.
+                  </p>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <CircleCheckBig className="text-green-300 w-5 h-5" />
-                <p className="text-[15px] font-bold">
-                  Easy integration{" "}
-                  <span className="text-gray-400 font-normal">
-                    — Add to your site in minutes
-                  </span>
-                </p>
+              <div className="flex items-start gap-3">
+                <div className="mt-1 p-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
+                  <CircleCheckBig className="text-emerald-500 w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-[15px] font-semibold text-foreground">
+                    Plug-and-play SDK
+                  </p>
+                  <p className="text-muted-foreground text-xs mt-0.5">
+                    Drop-in checkout buttons, secure webhooks, and sandbox testing support.
+                  </p>
+                </div>
               </div>
             </div>
-            <Button className="bg-[#1e50da] hover:shadow-2xl shadow-2xl rounded-xl py-6 px-8 text-[15px] text-white font-semibold">
-              Start Accepting Payment
+            <Button className="bg-[#1e50da] hover:bg-[#1a44bb] hover:shadow-lg rounded-xl py-6 px-8 text-[15px] text-white font-semibold shadow-md shadow-blue-500/10 cursor-pointer">
+              Start Accepting Payments
             </Button>
           </div>
-          <div className="flex w-full md:flex-1 bg-[#f2f6ff] rounded-2xl p-15 shadow-sm">
-            <div className="w-full flex flex-col gap-6">
-              {/* Header */}
-              <div className="flex items-start justify-between">
+          
+          {/* Glassmorphic Mockup Dashboard */}
+          <div className="flex w-full lg:flex-1 bg-card border border-border rounded-2xl p-8 md:p-12 shadow-xl relative overflow-hidden transition-colors duration-300">
+            <div className="absolute -top-12 -left-12 w-48 h-48 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
+            <div className="relative w-full flex flex-col gap-6 z-10">
+              <div className="flex items-center justify-between pb-6 border-b border-border">
                 <div>
-                  <p className="text-gray-600 text-sm">Merchant Dashboard</p>
-                  <h1 className="text-3xl font-medium text-gray-900 mt-2">
+                  <p className="text-muted-foreground text-xs tracking-wider uppercase font-semibold">Merchant Dashboard</p>
+                  <h1 className="text-3xl font-bold text-foreground mt-2">
                     ₦2,850,000
                   </h1>
-                  <p className="text-gray-500 text-sm mt-1">
-                    Total Sales This Month
+                  <p className="text-muted-foreground/80 text-xs mt-1">
+                    Total Volume Completed
                   </p>
                 </div>
-
-                {/* Icon */}
-                <div className="text-green-500 text-xl">
-                  <TrendingUp />
+                <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl text-emerald-500">
+                  <TrendingUp className="w-6 h-6" />
                 </div>
               </div>
 
-              {/* Bottom Cards */}
               <div className="grid grid-cols-2 gap-4">
-                {/* Pending */}
-                <div className="bg-white/60 rounded-xl p-4">
-                  <p className="text-gray-600 text-sm">Pending</p>
-                  <p className="text-yellow-500 font-medium text-lg mt-1">
-                    ₦200K
+                <div className="bg-background border border-border rounded-xl p-4 transition-colors duration-300">
+                  <p className="text-muted-foreground text-xs">Pending Escrow</p>
+                  <p className="text-amber-500 font-semibold text-lg mt-1">
+                    ₦200,000
                   </p>
                 </div>
-
-                {/* Available */}
-                <div className="bg-white/60 rounded-xl p-4">
-                  <p className="text-gray-600 text-sm">Available</p>
-                  <p className="text-green-500 font-medium text-lg mt-1">
-                    ₦1.2M
+                <div className="bg-background border border-border rounded-xl p-4 transition-colors duration-300">
+                  <p className="text-muted-foreground text-xs">Available Balance</p>
+                  <p className="text-emerald-500 font-semibold text-lg mt-1">
+                    ₦1,245,000
                   </p>
                 </div>
               </div>
@@ -90,18 +101,19 @@ const SecurePaymentSection = () => {
           </div>
         </div>
 
-        <div className="max-w-5xl mx-auto flex items-center justify-between gap-4 mt-30">
-          <div className="flex flex-col gap-2 text-center">
-            <h1 className="text-3xl text-[#4369eb]">₦2.5B+</h1>
-            <p>Secured safely</p>
+        {/* Stats Section */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24 border-t border-border/80 pt-16">
+          <div className="flex flex-col gap-2 text-center md:text-left">
+            <h1 className="text-4xl font-extrabold text-blue-600 dark:text-blue-500">₦2.5B+</h1>
+            <p className="text-muted-foreground text-sm font-medium">Secured Transactions</p>
           </div>
-          <div className="flex flex-col gap-2 text-center">
-            <h1 className="text-3xl text-[#4369eb]">50,000+</h1>
-            <p>Successful Transactions</p>
+          <div className="flex flex-col gap-2 text-center md:text-left">
+            <h1 className="text-4xl font-extrabold text-blue-600 dark:text-blue-500">50,000+</h1>
+            <p className="text-muted-foreground text-sm font-medium">Verified Active Accounts</p>
           </div>
-          <div className="flex flex-col gap-2 text-center">
-            <h1 className="text-3xl text-[#4369eb]">99.9%</h1>
-            <p>Satisfaction Rate</p>
+          <div className="flex flex-col gap-2 text-center md:text-left">
+            <h1 className="text-4xl font-extrabold text-blue-600 dark:text-blue-500">99.9%</h1>
+            <p className="text-muted-foreground text-sm font-medium">Conflict Resolution Rate</p>
           </div>
         </div>
       </div>

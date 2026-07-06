@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { motion } from "framer-motion";
 
 type ChatBubble = {
   message: string;
@@ -9,15 +12,36 @@ type ChatBubble = {
 const Message = ({ message, time, variant }: ChatBubble) => {
   const isOutgoing = variant === "outgoing";
 
+  // Outgoing = current user (slide from left), incoming = other party (slide from right)
+  const slideVariant = {
+    hidden: { opacity: 0, x: isOutgoing ? -20 : 20 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] as const },
+    },
+  };
+
   return (
-    <div className={`flex items-center my-2 ${isOutgoing ? "justify-start" : "justify-end"}`}>
-      <div className={`max-w-[80%]  px-4 py-2 rounded-xl ${isOutgoing ? "bg-[#f3f4f6]" : "bg-[#2056df]"}`}>
-        {/* <div className=""> */}
-          <p className={`text-sm ${isOutgoing ? "text-black" : "text-white"}`}>{message}</p>
-        {/* </div> */}
-        <span className="text-gray-300 text-xs text-left">{time}</span>
+    <motion.div
+      className={`flex items-center my-2 ${isOutgoing ? "justify-start" : "justify-end"}`}
+      initial="hidden"
+      animate="visible"
+      variants={slideVariant}
+    >
+      <div
+        className={`max-w-[80%] px-4 py-2.5 rounded-2xl border ${
+          isOutgoing 
+            ? "bg-secondary text-foreground border-border" 
+            : "bg-primary text-primary-foreground border-primary"
+        }`}
+      >
+        <p className="text-sm font-medium">
+          {message}
+        </p>
+        <span className="text-[10px] opacity-70 block text-right mt-1">{time}</span>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

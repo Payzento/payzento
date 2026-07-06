@@ -1,60 +1,95 @@
+"use client";
+
 import { DollarSign, Lock, MoveUp, TrendingUp, TriangleAlert } from "lucide-react";
 import React from "react";
+import { motion } from "framer-motion";
+import { staggerContainer, staggerItem } from "@/lib/animations";
 
 const MerchantCards = () => {
   return (
-    <div className="w-full grid grid-cols-1 md:grid-cols-4 items-start justify-between gap-4">
+    <motion.div
+      className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-start justify-between gap-6"
+      initial="hidden"
+      animate="visible"
+      variants={staggerContainer}
+    >
       {/* TOTAL SALES */}
-      <div className="w-full border bg-white shadow-md p-5 rounded-xl">
+      <motion.div
+        className="w-full border border-border bg-card shadow-sm p-6 rounded-2xl transition-colors duration-300"
+        variants={staggerItem}
+        whileHover={{ y: -3, boxShadow: "0 12px 30px rgba(0,0,0,0.03)" }}
+        transition={{ duration: 0.2 }}
+      >
         <div className="w-full flex items-center justify-between gap-1 mb-3">
-          <p className="font-light text-gray-500">Total Sales</p>
-          <TrendingUp className="text-[#2acc8f]" />
+          <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Total Sales</p>
+          <div className="p-1.5 bg-emerald-500/10 rounded-lg text-emerald-500">
+            <TrendingUp className="w-4 h-4" />
+          </div>
         </div>
-        <h1 className="text-2xl">₦2,850,000</h1>
-        <p className="flex items-center gap-0.5 text-[#4dcd8b] text-xs">
-          <MoveUp className="w-2.5" />
+        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">₦2,850,000</h1>
+        <p className="flex items-center gap-0.5 text-emerald-500 text-xs font-semibold mt-2">
+          <MoveUp className="w-3 h-3" />
           23% from last month
         </p>
-      </div>
+      </motion.div>
 
       {/* PENDING LOCK */}
-      <div className="w-full border border-[#fef1b8] bg-[#fffdf6] shadow-md p-6 rounded-xl">
+      <motion.div
+        className="w-full border border-amber-500/20 bg-amber-500/5 shadow-sm p-6 rounded-2xl transition-colors duration-300"
+        variants={staggerItem}
+        whileHover={{ y: -3, boxShadow: "0 12px 30px rgba(0,0,0,0.03)" }}
+        transition={{ duration: 0.2 }}
+      >
         <div className="w-full flex items-center justify-between gap-1 mb-3">
-          <p className="flex items-center gap-1 font-light text-gray-500">
-            <Lock className="w-4" />
-            Pending(Locked)
+          <p className="flex items-center gap-1.5 text-sm font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
+            <Lock className="w-4 h-4" />
+            Pending (Locked)
           </p>
         </div>
-        <h1 className="text-2xl">₦200,000</h1>
-        <p className="flex items-center gap-1 text-gray-400 text-xs">
-          2 transactions held
+        <h1 className="text-3xl font-extrabold tracking-tight text-amber-500">₦200,000</h1>
+        <p className="text-muted-foreground/80 text-xs font-medium mt-2">
+          2 transactions held in escrow
         </p>
-      </div>
+      </motion.div>
 
       {/* AVAILABLE BALANCE */}
-      <div className="w-full border border-[#d6e8ff] bg-[#f5faff] shadow-md p-6 rounded-xl">
+      <motion.div
+        className="w-full border border-blue-500/20 bg-blue-500/5 shadow-sm p-6 rounded-2xl transition-colors duration-300"
+        variants={staggerItem}
+        whileHover={{ y: -3, boxShadow: "0 12px 30px rgba(0,0,0,0.03)" }}
+        transition={{ duration: 0.2 }}
+      >
         <div className="w-full flex items-center justify-between gap-1 mb-3">
-          <p className="font-light text-gray-500">Available Balance</p>
-          <DollarSign className="text-[#5989f0]" />
+          <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider">Available Balance</p>
+          <div className="p-1.5 bg-blue-500/10 rounded-lg text-blue-500">
+            <DollarSign className="w-4 h-4" />
+          </div>
         </div>
-        <h1 className="text-2xl mb-2">₦1,245,000</h1>
-        <p className="flex items-center gap-1 text-lg">
-          Withdraw
-        </p>
-      </div>
+        <h1 className="text-3xl font-extrabold tracking-tight text-blue-600 dark:text-blue-400">₦1,245,000</h1>
+        <button className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline mt-2 inline-block">
+          Withdraw Funds
+        </button>
+      </motion.div>
 
       {/* DISPUTE */}
-      <div className="w-full border bg-white shadow-md p-6 rounded-xl">
+      <motion.div
+        className="w-full border border-border bg-card shadow-sm p-6 rounded-2xl transition-colors duration-300"
+        variants={staggerItem}
+        whileHover={{ y: -3, boxShadow: "0 12px 30px rgba(0,0,0,0.03)" }}
+        transition={{ duration: 0.2 }}
+      >
         <div className="w-full flex items-center justify-between gap-1 mb-3">
-          <p className="font-light text-gray-500">Disputes</p>
-          <TriangleAlert className="text-[#f04d4d]" />
+          <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Disputes</p>
+          <div className="p-1.5 bg-red-500/10 rounded-lg text-red-500">
+            <TriangleAlert className="w-4 h-4" />
+          </div>
         </div>
-        <h1 className="text-2xl">1</h1>
-        <p className="flex items-center gap-1 text-gray-500 text-xs">
-          Active dispute
+        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">1</h1>
+        <p className="text-red-500 text-xs font-semibold mt-2">
+          Active dispute open
         </p>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

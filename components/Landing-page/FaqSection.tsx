@@ -1,4 +1,8 @@
+"use client";
+
 import React from "react";
+import { motion } from "framer-motion";
+import { staggerContainer, staggerItem } from "@/lib/animations";
 
 const faqs = [
   {
@@ -25,29 +29,35 @@ const faqs = [
 
 export default function FAQSection() {
   return (
-    <div className="w-full flex flex-col items-center py-10 px-4 bg-gray-100">
-      
-      {/* Title */}
-      <h2 className="text-3xl font-semibold text-blue-900 mb-8">
+    <div className="w-full flex flex-col items-center py-20 px-4 bg-background border-t border-border transition-colors duration-300">
+      <motion.h2
+        className="text-2xl md:text-4xl font-bold tracking-tight text-foreground mb-12 text-center"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }}
+      >
         Frequently Asked Questions
-      </h2>
+      </motion.h2>
 
-      {/* FAQ List */}
-      <div className="w-full max-w-3xl flex flex-col gap-6">
+      <motion.div
+        className="w-full max-w-3xl flex flex-col gap-4"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-80px" }}
+        variants={staggerContainer}
+      >
         {faqs.map((faq, index) => (
-          <div
+          <motion.div
             key={index}
-            className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200"
+            variants={staggerItem}
+            className="bg-card rounded-2xl p-6 shadow-sm border border-border transition-colors duration-300"
           >
-            <h3 className="text-lg font-semibold text-blue-900">
-              {faq.question}
-            </h3>
-            <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-              {faq.answer}
-            </p>
-          </div>
+            <h3 className="text-lg font-bold text-foreground">{faq.question}</h3>
+            <p className="text-muted-foreground mt-2 text-sm leading-relaxed">{faq.answer}</p>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }

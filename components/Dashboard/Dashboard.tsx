@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Nav from "@/components/Nav";
 import {
@@ -18,246 +20,191 @@ import {
   Wallet,
 } from "lucide-react";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import PageWrapper from "@/components/PageWrapper";
+import { fadeUp, staggerContainer, staggerItem, scaleIn } from "@/lib/animations";
 
 type StatusType = "HELD" | "RELEASED" | "COMPLETED";
 
-const statusConfig: Record<StatusType, { icon: React.ElementType; bg: string; border: string; text: string; } > = {
-  HELD: {
-    icon: LockIcon,
-    bg: "bg-red-200",
-    text: "text-red-600",
-    border: "border border-red-300",
-  },
-  RELEASED: {
-    icon: CircleEllipsis,
-    bg: "bg-yellow-200",
-    text: "text-yellow-600",
-    border: "border border-yellow-300",
-  },
-  COMPLETED: {
-    icon: SquareCheck,
-    bg: "bg-green-200",
-    text: "text-green-600",
-    border: "border border-green-300",
-  },
+const statusConfig: Record<StatusType, { icon: React.ElementType; bg: string; border: string; text: string }> = {
+  HELD: { icon: LockIcon, bg: "bg-red-500/10", text: "text-red-500", border: "border border-red-500/20" },
+  RELEASED: { icon: CircleEllipsis, bg: "bg-amber-500/10", text: "text-amber-500", border: "border border-amber-500/20" },
+  COMPLETED: { icon: SquareCheck, bg: "bg-emerald-500/10", text: "text-emerald-500", border: "border border-emerald-500/20" },
 };
 
-type StatusItem = {
-  icon: React.ElementType;
-  stat: StatusType;
-};
-
-type TransactionProps = {
-  name: string;
-  status: StatusItem[];
-  amount: string;
-  purchase: string;
-  date: string;
-};
+type StatusItem = { icon: React.ElementType; stat: StatusType };
+type TransactionProps = { name: string; status: StatusItem[]; amount: string; purchase: string; date: string };
 
 const transactionsCard: TransactionProps[] = [
-  {
-    name: "Adewale Graphics",
-    status: [
-      {
-        icon: LockIcon,
-        stat: "HELD",
-      },
-    ],
-    amount: "₦125,000",
-    purchase: "Logo Design",
-    date: "2 days ago",
-  },
-  {
-    name: "TechHub Ltd",
-    status: [
-      {
-        icon: CircleEllipsis,
-        stat: "RELEASED",
-      },
-    ],
-    amount: "₦125,000",
-    purchase: "Logo Design",
-    date: "2 days ago",
-  },
-  {
-    name: "Adewale Graphics",
-    status: [
-      {
-        icon: LockIcon,
-        stat: "HELD",
-      },
-    ],
-    amount: "₦125,000",
-    purchase: "Logo Design",
-    date: "2 days ago",
-  },
-  {
-    name: "Adewale Graphics",
-    status: [
-      {
-        icon: SquareCheck,
-        stat: "COMPLETED",
-      },
-    ],
-    amount: "₦125,000",
-    purchase: "Logo Design",
-    date: "2 days ago",
-  },
+  { name: "Adewale Graphics", status: [{ icon: LockIcon, stat: "HELD" }], amount: "₦125,000", purchase: "Logo Design", date: "2 days ago" },
+  { name: "TechHub Ltd", status: [{ icon: CircleEllipsis, stat: "RELEASED" }], amount: "₦125,000", purchase: "Logo Design", date: "2 days ago" },
+  { name: "Adewale Graphics", status: [{ icon: LockIcon, stat: "HELD" }], amount: "₦125,000", purchase: "Logo Design", date: "2 days ago" },
+  { name: "Adewale Graphics", status: [{ icon: SquareCheck, stat: "COMPLETED" }], amount: "₦125,000", purchase: "Logo Design", date: "2 days ago" },
 ];
 
 const Dashboard = () => {
   return (
-    <div>
-      <Nav />
-      <div className="mt-20 max-w-7xl mx-auto px-2 pt-4">
-        <div className="flex flex-col md:flex-row gap-4 ">
-          <Card className="bg-[#132c51] w-full flex-1 text-white px-4 py-6">
-            <CardHeader>
-              <CardTitle className="text-gray-300 text-lg">
-                Available Balance
-              </CardTitle>
-              <CardAction>
-                <Wallet />
-              </CardAction>
-            </CardHeader>
-            <CardContent className="">
-              <p className="text-3xl">₦1,245,000</p>
-              <Link href="/dashboard/withdraw">
-                <button className="bg-white hover:border-2 hover:border-blue-400 rounded-xl px-4 py-2 text-black font-semibold mt-5 cursor-pointer">
-                  Withdraw
-                </button>
-              </Link>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-[#ea8e09] w-full flex-1 text-white px-4 py-6">
-            <CardHeader className="flex items-center gap-2 text-white">
-              <Lock className="text-white w-4.5 h-4.5" />
-              <CardTitle className="text-gray-100 text-lg">
-                Locked Funds
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl">₦200,500</p>
-              <p className="mt-5">Funds held in 2 active transactions</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Link
-          href="new-transaction"
-          className="my-6 w-fit bg-[#1e51da] px-6 py-4 rounded-xl flex items-center gap-2 text-white cursor-pointer hover:shadow-xl"
-        >
-          <Plus />
-          Start New Transaction
-        </Link>
-      </div>
-
-      <div className="w-full flex flex-col max-w-7xl mx-auto p-4">
-        <div className="flex items-center justify-between gap-2 my-5">
-          <h1 className="font-semibold text-xl">Recent Transactions</h1>
-          <Link
-            href="#"
-            className="text-sm hover:underline underline-offset-1 text-[#3473ee]"
+    <PageWrapper>
+      <div className="bg-background text-foreground min-h-screen transition-colors duration-300 pb-12">
+        <Nav />
+        <div className="mt-24 max-w-7xl mx-auto px-4 pt-4">
+          {/* Balance Cards */}
+          <motion.div
+            className="flex flex-col md:flex-row gap-6"
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
           >
-            View All
-          </Link>
-        </div>
-        <div className="flex flex-col">
-          {transactionsCard.map((card, index) => {
-            return (
-              <Link
-                href="review-funds"
-                key={index}
-                className="cursor-pointer my-2"
+            <motion.div className="flex-1" variants={staggerItem}>
+              <Card className="bg-gradient-to-br from-[#0c152b] to-[#070f20] w-full text-white border border-[#1a2860] px-6 py-6 shadow-xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-blue-200/80 text-sm font-semibold tracking-wider uppercase">Available Balance</CardTitle>
+                  <CardAction className="text-blue-400"><Wallet className="w-5 h-5" /></CardAction>
+                </CardHeader>
+                <CardContent className="pt-2">
+                  <p className="text-4xl font-extrabold tracking-tight">₦1,245,000</p>
+                  <Link href="/dashboard/withdraw">
+                    <motion.button
+                      className="bg-white hover:bg-slate-50 text-slate-900 rounded-xl px-5 py-2.5 text-sm font-semibold mt-6 cursor-pointer shadow-md shadow-black/10"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.97 }}
+                    >
+                      Withdraw
+                    </motion.button>
+                  </Link>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div className="flex-1" variants={staggerItem}>
+              <Card className="bg-card w-full text-foreground border border-border px-6 py-6 shadow-xl relative overflow-hidden transition-colors duration-300">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <div className="flex items-center gap-2">
+                    <Lock className="text-amber-500 w-4 h-4" />
+                    <CardTitle className="text-muted-foreground text-sm font-semibold tracking-wider uppercase">Locked Funds</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-2">
+                  <p className="text-4xl font-extrabold tracking-tight text-amber-500">₦200,500</p>
+                  <p className="text-muted-foreground text-sm mt-6">Held securely in 2 active escrow agreements</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </motion.div>
+
+          <motion.div initial="hidden" animate="visible" variants={fadeUp} transition={{ delay: 0.25 }}>
+            <Link
+              href="new-transaction"
+              className="my-8 w-fit bg-primary text-primary-foreground hover:bg-primary/95 px-6 py-4 rounded-xl flex items-center gap-2 cursor-pointer shadow-lg shadow-blue-500/5"
+            >
+              <motion.span
+                className="flex items-center gap-2 font-semibold"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
               >
-                <Card className="w-full flex-1 text-white px-4 py-6 hover:shadow-lg">
-                  <CardHeader className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2 text-white">
-                      <CardTitle className="text-black text-lg">
-                        {card.name}
-                      </CardTitle>
-                      <div className="">
-                        {card.status.map((item, index) => {
-                          const config = statusConfig[item.stat];
-                          const Icon = item.icon;
-
-                          return (
-                            <div
-                              key={index}
-                              className={`flex items-center gap-2 py-2 px-4 rounded-full ${config.text} ${config.border} ${config.bg}`}
-                            >
-                              <Icon className="w-4 h-4" />
-                              <p className="">{item.stat}</p>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    <div className="text-black">
-                      <p className="text-xl">{card.amount}</p>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="flex items-start justify-between gap-2">
-                    <div className="text-left">
-                      <p className="text-gray-500">{card.purchase}</p>
-                      <span className="text-gray-400 text-xs p-0 ">
-                        {card.date}
-                      </span>
-                    </div>
-                    <ArrowRight className="text-gray-400 w-4 h-4" />
-                  </CardContent>
-                </Card>
-              </Link>
-            );
-          })}
+                <Plus className="w-5 h-5" />
+                Start New Transaction
+              </motion.span>
+            </Link>
+          </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-5">
-          <Card className="col-span-1 text-center hover:shadow-xl cursor-pointer">
-            <CardHeader className="p-0">
-              <CardTitle className="flex flex-col items-center justify-center gap-3 text-lg font-semibold">
-                <div className="bg-[#dbeafe] text-[#2966eb] p-3 rounded-full">
-                  <Wallet className="w-6 h-6 " />
-                </div>
-                Wallet
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0 text-gray-500">
-              Manage your funds
-            </CardContent>
-          </Card>
-          <Card className="col-span-1 text-center hover:shadow-xl cursor-pointer">
-            <CardHeader className="p-0">
-              <CardTitle className="flex flex-col items-center justify-center gap-3 text-lg font-semibold">
-                <div className="bg-[#fef3c6] text-[#f7b032] p-3 rounded-full">
-                  <Lock className="w-6 h-6 " />
-                </div>
-                Active Escrows
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0 text-gray-500">
-              View locked transactions
-            </CardContent>
-          </Card>
-          <Card className="col-span-1 text-center hover:shadow-xl cursor-pointer">
-            <CardHeader className="p-0">
-              <CardTitle className="flex flex-col items-center justify-center gap-3 text-lg font-semibold">
-                <div className="bg-[#f3e8ff] text-[#e53679] p-3 rounded-full">
-                  <ChartNoAxesColumnIncreasing className="w-6 h-6 " />
-                </div>
-                Reports
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0 text-gray-500">
-              Transaction history
-            </CardContent>
-          </Card>
+        <div className="w-full flex flex-col max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-between gap-2 mb-6">
+            <h1 className="font-bold text-2xl tracking-tight text-foreground">Recent Transactions</h1>
+            <Link href="#" className="text-sm font-semibold hover:underline underline-offset-2 text-blue-600 dark:text-blue-400">
+              View All
+            </Link>
+          </div>
+
+          {/* Transaction rows with stagger */}
+          <motion.div
+            className="flex flex-col gap-4"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+          >
+            {transactionsCard.map((card, index) => {
+              return (
+                <motion.div key={index} variants={staggerItem}>
+                  <Link href="review-funds" className="cursor-pointer block">
+                    <motion.div
+                      whileHover={{ y: -2, boxShadow: "0 12px 30px rgba(0,0,0,0.02)" }}
+                      transition={{ duration: 0.2 }}
+                      className="border border-border/80 bg-card rounded-2xl p-6 transition-all duration-300 hover:border-blue-500/30"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                          <h2 className="text-lg font-bold text-foreground">{card.name}</h2>
+                          <div className="flex gap-2">
+                            {card.status.map((item, i) => {
+                              const config = statusConfig[item.stat];
+                              const Icon = item.icon;
+                              return (
+                                <div
+                                  key={i}
+                                  className={`flex items-center gap-1.5 py-1 px-3.5 rounded-full text-xs font-semibold ${config.text} ${config.border} ${config.bg}`}
+                                >
+                                  <Icon className="w-3.5 h-3.5" />
+                                  <span>{item.stat}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between sm:justify-end gap-4">
+                          <span className="text-xl font-bold text-foreground">{card.amount}</span>
+                          <ArrowRight className="text-muted-foreground w-4 h-4" />
+                        </div>
+                      </div>
+                      <div className="flex flex-col mt-4 pt-4 border-t border-border/40 text-left">
+                        <span className="text-muted-foreground text-sm font-medium">{card.purchase}</span>
+                        <span className="text-muted-foreground/60 text-xs mt-1">{card.date}</span>
+                      </div>
+                    </motion.div>
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+
+          {/* Quick action cards */}
+          <div className="mt-12">
+            <h2 className="font-bold text-xl tracking-tight text-foreground mb-6">Quick Tools</h2>
+            <motion.div
+              className="grid grid-cols-1 md:grid-cols-3 gap-6"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={staggerContainer}
+            >
+              {[
+                { icon: <Wallet className="w-6 h-6 text-blue-600 dark:text-blue-400" />, bg: "bg-blue-500/10 border border-blue-500/20", title: "Wallet Control", desc: "Manage your withdrawals and bank cards" },
+                { icon: <Lock className="w-6 h-6 text-amber-500" />, bg: "bg-amber-500/10 border border-amber-500/20", title: "Active Escrows", desc: "Track payments pending milestone sign-offs" },
+                { icon: <ChartNoAxesColumnIncreasing className="w-6 h-6 text-pink-500" />, bg: "bg-pink-500/10 border border-pink-500/20", title: "Reports & Audits", desc: "Export statements and history documents" },
+              ].map((item, i) => (
+                <motion.div key={i} variants={staggerItem}>
+                  <motion.div
+                    whileHover={{ y: -3, boxShadow: "0 12px 30px rgba(0,0,0,0.03)" }}
+                    transition={{ duration: 0.2 }}
+                    className="bg-card border border-border rounded-2xl p-6 text-center hover:shadow-xl cursor-pointer transition-colors duration-300"
+                  >
+                    <div className="flex flex-col items-center justify-center gap-3">
+                      <div className={`p-3.5 rounded-2xl ${item.bg}`}>{item.icon}</div>
+                      <h3 className="text-lg font-bold text-foreground mt-2">{item.title}</h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 };
 

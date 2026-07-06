@@ -1,5 +1,9 @@
+"use client";
+
 import { CircleCheckBig } from "lucide-react";
 import React from "react";
+import { motion, AnimatePresence, Variants } from "framer-motion";
+import { scaleIn } from "@/lib/animations";
 
 type StepComponent = React.ComponentType<{
   onNext: () => void;
@@ -21,6 +25,7 @@ type StepperProps = {
   stepLabels?: string[];
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
   renderStepIndicator?: (props: StepIndicatorProps) => React.ReactNode;
+  stepSlideVariant?: Variants;
 };
 
 const DefaultStepIndicator = ({ index, isCompleted }: StepIndicatorProps) => {
@@ -38,6 +43,7 @@ const Stepper = ({
   stepLabels,
   setCurrentStep,
   renderStepIndicator,
+  stepSlideVariant,
 }: StepperProps) => {
   const next = () => {
     setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
@@ -51,6 +57,12 @@ const Stepper = ({
   const CurrentSteps = steps[currentStep];
   const renderIndicator = renderStepIndicator ?? DefaultStepIndicator;
 
+  // Default slide variant if none provided
+  const slideVariant: Variants = stepSlideVariant ?? {
+    hidden: { opacity: 0, x: 30 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } },
+  };
+
   return (
     <div className="w-full min-h-screen flex flex-col items-center px-4">
       {/* Progress bar */}
@@ -62,37 +74,47 @@ const Stepper = ({
           const isHighlighted = isCompleted || isActive;
 
           return (
-            // <>
-              <div key={index} className="flex-1 last:flex-none group relative">
-                <div
-                  // key={index}
-                  className={`flex items-center justify-center text-white ${className2} ${
-                    isHighlighted ? "bg-blue-600" : "bg-gray-300"
-                  }`}
-                >
-                  {renderIndicator({ index, isCompleted, isActive })}
-                </div>
-                <div
-                  className={`absolute group-last:hidden ${className3} ${isHighlighted ? "bg-blue-600" : "bg-gray-300"}`}
-                />
-                {stepLabels && (
-                  <span
+            <div key={index} className="flex-1 last:flex-none group relative">
+              <motion.div
+                className={`flex items-center justify-center text-white ${className2} ${
+                  isHighlighted ? "bg-blue-600" : "bg-gray-300"
+                }`}
+                animate={isActive ? { scale: 1.1 } : { scale: 1 }}
+                transition={{ duration: 0.2 }}
+              >
+                {renderIndicator({ index, isCompleted, isActive })}
+              </motion.div>
+              <div
+                className={`absolute group-last:hidden ${className3} ${isHighlighted ? "bg-blue-600" : "bg-gray-300"}`}
+              />
+              {stepLabels && (
+                <span
                   key={index}
-                    className={`text-xs -translate-x-7 ${isHighlighted ? "text-black" : "text-gray-400"}`}
-                  >
-                    {stepLabels[index] ?? `Step ${index + 1}`}
-                  </span>
-                )}
-              </div>
-            // </>
+                  className={`text-xs -translate-x-7 ${isHighlighted ? "text-black" : "text-gray-400"}`}
+                >
+                  {stepLabels[index] ?? `Step ${index + 1}`}
+                </span>
+              )}
+            </div>
           );
         })}
       </div>
 
-      {/* Card */}
-      <CurrentSteps onNext={next} />
+      {/* Animated step content */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentStep}
+          initial="hidden"
+          animate="visible"
+          exit={{ opacity: 0, transition: { duration: 0.15 } }}
+          variants={slideVariant}
+          className="w-full"
+        >
+          <CurrentSteps onNext={next} />
+        </motion.div>
+      </AnimatePresence>
 
-      {/* Sign in */}
+      {/* Footer */}
       {footer && <div className="mt-6">{footer}</div>}
     </div>
   );
