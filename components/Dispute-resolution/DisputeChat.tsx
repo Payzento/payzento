@@ -4,14 +4,15 @@ import { MessageSquare, Send, Loader2 } from "lucide-react";
 import React, { useState } from "react";
 import Messages from "./Messages";
 import { useAuth } from "@/context/AuthContext";
-import { sendDisputeMessage } from "@/lib/services/dispute.service";
+import { sendMessage } from "@/lib/chat.service";
 
 interface DisputeChatProps {
   disputeId: string;
   messages: any[];
+  senderRole: "buyer" | "seller" | "arbitrator";
 }
 
-const DisputeChat = ({ disputeId, messages }: DisputeChatProps) => {
+const DisputeChat = ({ disputeId, messages, senderRole }: DisputeChatProps) => {
   const { user } = useAuth();
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
@@ -22,10 +23,7 @@ const DisputeChat = ({ disputeId, messages }: DisputeChatProps) => {
 
     setSending(true);
     try {
-      // Determine role: buyer or seller
-      // (Defaulting to buyer/seller role based on check, or we can check seller ID if needed)
-      const role = "buyer"; // In this escrow flow, user is typically buyer, but can fallback to check. We can use RLS compatible role.
-      await sendDisputeMessage(disputeId, user.id, role, text);
+      await sendMessage(disputeId, user.id, senderRole, text);
       setText("");
     } catch (err) {
       console.error("Failed to send dispute message:", err);
@@ -38,7 +36,7 @@ const DisputeChat = ({ disputeId, messages }: DisputeChatProps) => {
     <div className="shadow-lg border border-border p-6 rounded-2xl bg-card text-foreground transition-colors duration-300">
       <h1 className="flex items-center gap-2 text-lg font-semibold mb-4">
         <MessageSquare className="w-4.5 h-4.5 text-[#356eed]"/>
-        Escrow Dispute Chat
+        Escrow Dispute Chat ({senderRole})
       </h1>
 
       <div>
@@ -49,7 +47,7 @@ const DisputeChat = ({ disputeId, messages }: DisputeChatProps) => {
             type="text"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Type your message..."
+            placeholder="Type your message and press Enter..."
             className="flex-1 h-12 border border-border bg-background text-foreground rounded-xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2360e8]/20 focus:border-[#2360e8]"
           />
           <button

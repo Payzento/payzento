@@ -10,11 +10,19 @@ type ChatBubble = {
 };
 
 const Message = ({ message, time, variant }: ChatBubble) => {
-  const isOutgoing = variant === "outgoing";
+  // Parse role label from time (passed as "Role • Time")
+  // e.g. "Other Party (arbitrator) • 2:34 PM" or "Other Party (seller) • 2:34 PM"
+  const isArbitrator = time.toLowerCase().includes("(arbitrator)");
+  const isSeller = time.toLowerCase().includes("(seller)");
+  const isBuyer = time.toLowerCase().includes("(buyer)") || time.startsWith("You");
 
-  // Outgoing = current user (slide from left), incoming = other party (slide from right)
+  // Buyer: right-aligned, indigo bubble
+  // Seller: left-aligned, grey bubble
+  // Arbitrator: left-aligned, amber left border
+  const isRightAligned = isBuyer;
+
   const slideVariant = {
-    hidden: { opacity: 0, x: isOutgoing ? -20 : 20 },
+    hidden: { opacity: 0, x: isRightAligned ? 20 : -20 },
     visible: {
       opacity: 1,
       x: 0,
@@ -22,24 +30,30 @@ const Message = ({ message, time, variant }: ChatBubble) => {
     },
   };
 
+  let bubbleClass = "";
+  if (isArbitrator) {
+    bubbleClass = "bg-amber-500/5 text-foreground border-l-4 border-l-amber-500 border-y-transparent border-r-transparent rounded-r-2xl pl-4 py-2.5";
+  } else if (isBuyer) {
+    bubbleClass = "bg-indigo-600 text-white border-none rounded-2xl";
+  } else {
+    // Seller
+    bubbleClass = "bg-secondary text-foreground border border-border rounded-2xl";
+  }
+
   return (
     <motion.div
-      className={`flex items-center my-2 ${isOutgoing ? "justify-start" : "justify-end"}`}
+      className={`flex items-center my-2.5 ${isRightAligned ? "justify-end" : "justify-start"}`}
       initial="hidden"
       animate="visible"
       variants={slideVariant}
     >
-      <div
-        className={`max-w-[80%] px-4 py-2.5 rounded-2xl border ${
-          isOutgoing 
-            ? "bg-secondary text-foreground border-border" 
-            : "bg-primary text-primary-foreground border-primary"
-        }`}
-      >
-        <p className="text-sm font-medium">
+      <div className={`max-w-[80%] px-4 py-2.5 shadow-sm ${bubbleClass}`}>
+        <p className="text-sm font-medium leading-relaxed whitespace-pre-wrap">
           {message}
         </p>
-        <span className="text-[10px] opacity-70 block text-right mt-1">{time}</span>
+        <span className={`text-[10px] opacity-70 block mt-1 ${isRightAligned ? "text-right" : "text-left"}`}>
+          {time}
+        </span>
       </div>
     </motion.div>
   );

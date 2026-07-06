@@ -8,6 +8,7 @@ export async function createDispute(data: {
   sellerId?: string | null;
   reason: string;
   description: string;
+  evidenceUrls?: string[];
 }) {
   const supabase = await createServerSupabaseClient();
   
@@ -21,6 +22,7 @@ export async function createDispute(data: {
       reason: data.reason,
       description: data.description,
       status: "open",
+      evidence_urls: data.evidenceUrls || [],
     })
     .select()
     .single();

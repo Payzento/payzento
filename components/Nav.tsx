@@ -17,13 +17,15 @@ import {
   X,
   LogOut,
   User as UserIcon,
+  TriangleAlert,
 } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
 import { useAuth } from "@/context/AuthContext";
+import { createClient } from "@/lib/supabase/client";
 
 interface DropdownItem {
   icon: React.ReactNode;
@@ -57,6 +59,66 @@ const Nav = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileSidebarOpen, setProfileSidebarOpen] = useState(false);
+  const [disputeMsgCount, setDisputeMsgCount] = useState(0);
+
+  useEffect(() => {
+    if (!user) {
+      setDisputeMsgCount(0);
+      return;
+    }
+    
+    const clientSupabase = createClient();
+    
+    const fetchCount = async () => {
+      try {
+        const { data: disputes } = await clientSupabase
+          .from("disputes")
+          .select("id")
+          .or(`buyer_id.eq.${user.id},seller_id.eq.${user.id}`);
+
+        if (!disputes || disputes.length === 0) {
+          setDisputeMsgCount(0);
+          return;
+        }
+
+        const disputeIds = disputes.map((d) => d.id);
+        
+        const { count, error } = await clientSupabase
+          .from("dispute_messages")
+          .select("id", { count: "exact", head: true })
+          .in("dispute_id", disputeIds);
+
+        if (error) {
+          console.error("Error fetching message count:", error);
+        } else {
+          setDisputeMsgCount(count || 0);
+        }
+      } catch (err) {
+        console.error("Dispute count fetch error:", err);
+      }
+    };
+
+    fetchCount();
+
+    const messagesChannel = clientSupabase
+      .channel("nav-dispute-messages-count")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "dispute_messages",
+        },
+        () => {
+          fetchCount();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      clientSupabase.removeChannel(messagesChannel);
+    };
+  }, [user]);
 
   const toggleMobileMenu = () => setMobileOpen(!mobileOpen);
 
@@ -412,7 +474,23 @@ const Nav = () => {
                     <Lock className="w-4 h-4 text-amber-500" />
                     New Transaction
                   </Link>
+                  <Link
+                    href="/dispute-resolution"
+                    onClick={() => setProfileSidebarOpen(false)}
+                    className="w-full flex items-center justify-between p-3.5 rounded-xl hover:bg-muted text-sm font-semibold transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <TriangleAlert className="w-4 h-4 text-red-500" />
+                      <span>Disputes</span>
+                    </div>
+                    {disputeMsgCount > 0 && (
+                      <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                        {disputeMsgCount}
+                      </span>
+                    )}
+                  </Link>
                 </div>
+
               </div>
 
               {/* Bottom Logout Button */}
