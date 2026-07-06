@@ -5,7 +5,33 @@ import React from "react";
 import { motion } from "framer-motion";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 
-const MerchantCards = () => {
+interface MerchantCardsProps {
+  wallet: any;
+  transactions: any[];
+}
+
+const MerchantCards = ({ wallet, transactions }: MerchantCardsProps) => {
+  const formatCurrency = (amountKobo: number) => {
+    return (amountKobo / 100).toLocaleString("en-NG", {
+      style: "currency",
+      currency: "NGN",
+      minimumFractionDigits: 0,
+    });
+  };
+
+  // Calculations
+  const totalSalesKobo = transactions
+    .filter(t => t.status === "completed")
+    .reduce((sum, t) => sum + Number(t.amount || 0), 0);
+
+  const pendingPayoutsKobo = transactions
+    .filter(t => t.status === "active" || t.status === "pending")
+    .reduce((sum, t) => sum + Number(t.amount || 0), 0);
+
+  const disputeCount = transactions.filter(t => t.status === "disputed").length;
+
+  const availableBalanceKobo = wallet?.available_balance || 0;
+
   return (
     <motion.div
       className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-start justify-between gap-6"
@@ -26,10 +52,12 @@ const MerchantCards = () => {
             <TrendingUp className="w-4 h-4" />
           </div>
         </div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">₦2,850,000</h1>
+        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+          {formatCurrency(totalSalesKobo)}
+        </h1>
         <p className="flex items-center gap-0.5 text-emerald-500 text-xs font-semibold mt-2">
           <MoveUp className="w-3 h-3" />
-          23% from last month
+          Tracked from completed orders
         </p>
       </motion.div>
 
@@ -46,9 +74,11 @@ const MerchantCards = () => {
             Pending (Locked)
           </p>
         </div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-amber-500">₦200,000</h1>
+        <h1 className="text-3xl font-extrabold tracking-tight text-amber-500">
+          {formatCurrency(pendingPayoutsKobo)}
+        </h1>
         <p className="text-muted-foreground/80 text-xs font-medium mt-2">
-          2 transactions held in escrow
+          {transactions.filter(t => t.status === "active" || t.status === "pending").length} active escrows
         </p>
       </motion.div>
 
@@ -65,7 +95,9 @@ const MerchantCards = () => {
             <DollarSign className="w-4 h-4" />
           </div>
         </div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-blue-600 dark:text-blue-400">₦1,245,000</h1>
+        <h1 className="text-3xl font-extrabold tracking-tight text-blue-600 dark:text-blue-400">
+          {formatCurrency(availableBalanceKobo)}
+        </h1>
         <button className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline mt-2 inline-block">
           Withdraw Funds
         </button>
@@ -84,9 +116,11 @@ const MerchantCards = () => {
             <TriangleAlert className="w-4 h-4" />
           </div>
         </div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">1</h1>
-        <p className="text-red-500 text-xs font-semibold mt-2">
-          Active dispute open
+        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+          {disputeCount}
+        </h1>
+        <p className={`${disputeCount > 0 ? "text-red-500" : "text-muted-foreground/60"} text-xs font-semibold mt-2`}>
+          {disputeCount > 0 ? `${disputeCount} active dispute open` : "No active disputes"}
         </p>
       </motion.div>
     </motion.div>

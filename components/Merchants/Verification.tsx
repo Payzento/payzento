@@ -1,13 +1,18 @@
 "use client";
 
-import { ArrowRight, CircleCheckBig, Upload } from "lucide-react";
+import { ArrowRight, CircleCheckBig, Upload, Loader2, AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { useMerchantOnboarding } from "@/context/MerchantOnboardingContext";
+import { useAuth } from "@/context/AuthContext";
+import { createMerchantProfile } from "@/lib/services/merchant.service";
 
 const Verification = () => {
   const router = useRouter();
+  const { user } = useAuth();
   const { formData, updateFormData } = useMerchantOnboarding();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   const handleCacChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -21,13 +26,27 @@ const Verification = () => {
     }
   };
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log("MerchantOnboardingData:", formData);
-    router.push("/merchants-dashboard");
+    if (!user) {
+      setError("You must be logged in to complete merchant onboarding.");
+      return;
+    }
+    
+    setError("");
+    setIsSubmitting(true);
+
+    try {
+      await createMerchantProfile(user.id, formData);
+      router.push("/merchants-dashboard");
+    } catch (err: any) {
+      console.error(err);
+      setError(err?.message || "Failed to save merchant profile. Please try again.");
+      setIsSubmitting(false);
+    }
   };
 
-  const isSubmitEnabled = !!formData.cacDocument;
+  const isSubmitEnabled = !!formData.cacDocument && !isSubmitting;
 
   return (
     <div className="w-full flex flex-col items-center justify-center gap-4 bg-white p-6 border border-gray-200 shadow-lg rounded-lg">
@@ -40,6 +59,13 @@ const Verification = () => {
           Please upload your business registration documents to verify your merchant account.
         </p>
       </div>
+
+      {error && (
+        <div className="w-full bg-red-50 text-red-600 border border-red-200 rounded-xl p-3.5 flex items-start gap-2.5 text-sm font-semibold mb-4">
+          <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+          <span>{error}</span>
+        </div>
+      )}
 
       <div className="w-full flex flex-col gap-4 mb-6">
         <div className="flex flex-col gap-2">
@@ -93,9 +119,18 @@ const Verification = () => {
       <button
         onClick={handleSubmit}
         disabled={!isSubmitEnabled}
-        className="w-full flex items-center justify-center gap-2 text-white bg-blue-600 p-3 rounded-lg hover:shadow-xl cursor-pointer disabled:bg-blue-300 disabled:cursor-not-allowed font-semibold text-center"
+        className="w-full flex items-center justify-center gap-2 text-white bg-blue-600 p-3 rounded-lg hover:shadow-xl cursor-pointer disabled:bg-blue-300 disabled:cursor-not-allowed font-semibold text-center transition-colors"
       >
-        Complete Registration <ArrowRight />
+        {isSubmitting ? (
+          <>
+            <Loader2 className="w-5 h-5 animate-spin" />
+            Creating profile...
+          </>
+        ) : (
+          <>
+            Complete Registration <ArrowRight />
+          </>
+        )}
       </button>
     </div>
   );

@@ -1,17 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Book, Check, Copy, TriangleAlert } from "lucide-react";
 import IntegrationCode from "./IntegrationCode";
 import { motion, AnimatePresence } from "framer-motion";
 import { scaleIn, staggerContainer, staggerItem } from "@/lib/animations";
+import { useAuth } from "@/context/AuthContext";
+import { getMerchantProfile } from "@/lib/services/merchant.service";
 
 const IntegrationDetails = () => {
-  const [apiKey] = useState("sk_live_abc123xyz789def456ghi");
+  const { user } = useAuth();
+  const [apiKey, setApiKey] = useState("Loading API key...");
   const [copied, setCopied] = useState(false);
   const [codeCopied, setCodeCopied] = useState(false);
 
+  useEffect(() => {
+    if (!user) return;
+    getMerchantProfile(user.id)
+      .then((p) => {
+        if (p?.api_key) {
+          setApiKey(p.api_key);
+        } else {
+          setApiKey("Please complete merchant onboarding to get your API key.");
+        }
+      })
+      .catch((err) => {
+        console.error("Error loading API key:", err);
+        setApiKey("Error loading API key.");
+      });
+  }, [user]);
+
   const handleCopy = () => {
+    if (apiKey.startsWith("Loading") || apiKey.startsWith("Please") || apiKey.startsWith("Error")) return;
     navigator.clipboard.writeText(apiKey);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);

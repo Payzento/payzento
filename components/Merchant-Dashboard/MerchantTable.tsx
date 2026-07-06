@@ -13,33 +13,36 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 
-type StatusType = "HELD" | "REALEASED" | "DISPUTED";
+type DbStatusType = "pending" | "active" | "completed" | "disputed" | "cancelled";
+type UIStatusType = "HELD" | "RELEASED" | "DISPUTED" | "CANCELLED";
 
-const statusConfig: Record<StatusType, { bg: string; text: string; border: string }> = {
+const statusConfig: Record<UIStatusType, { bg: string; text: string; border: string }> = {
   HELD: { bg: "bg-amber-500/10", text: "text-amber-500", border: "border border-amber-500/20" },
-  REALEASED: { bg: "bg-emerald-500/10", text: "text-emerald-500", border: "border border-emerald-500/20" },
+  RELEASED: { bg: "bg-emerald-500/10", text: "text-emerald-500", border: "border border-emerald-500/20" },
   DISPUTED: { bg: "bg-red-500/10", text: "text-red-500", border: "border border-red-500/20" },
+  CANCELLED: { bg: "bg-slate-500/10", text: "text-slate-500", border: "border border-slate-500/20" },
 };
 
-type StatusItem = { stats: StatusType };
-type MerchantProps = {
-  taxID: string;
-  buyer: string;
-  product: string;
-  amount: string;
-  status: StatusItem[];
-  date: string;
-  action: string;
-};
+interface MerchantTableProps {
+  transactions: any[];
+}
 
-const merchantTable: MerchantProps[] = [
-  { taxID: "TXN001", buyer: "john@example.com", product: "Premium Package", amount: "₦125,000", status: [{ stats: "HELD" }], date: "2 hours ago", action: "View" },
-  { taxID: "TXN002", buyer: "john@example.com", product: "Premium Package", amount: "₦125,000", status: [{ stats: "REALEASED" }], date: "2 hours ago", action: "View" },
-  { taxID: "TXN003", buyer: "john@example.com", product: "Premium Package", amount: "₦125,000", status: [{ stats: "HELD" }], date: "2 hours ago", action: "View" },
-  { taxID: "TXN004", buyer: "john@example.com", product: "Premium Package", amount: "₦125,000", status: [{ stats: "DISPUTED" }], date: "2 hours ago", action: "View" },
-];
+const MerchantTable = ({ transactions }: MerchantTableProps) => {
+  const formatCurrency = (amountKobo: number) => {
+    return (amountKobo / 100).toLocaleString("en-NG", {
+      style: "currency",
+      currency: "NGN",
+      minimumFractionDigits: 0,
+    });
+  };
 
-const MerchantTable = () => {
+  const mapStatus = (dbStatus: DbStatusType): UIStatusType => {
+    if (dbStatus === "completed") return "RELEASED";
+    if (dbStatus === "disputed") return "DISPUTED";
+    if (dbStatus === "cancelled") return "CANCELLED";
+    return "HELD";
+  };
+
   return (
     <div className="w-full bg-card border border-border rounded-2xl p-6 transition-colors duration-300">
       <div className="flex items-center justify-between gap-2 mb-6">
@@ -52,54 +55,68 @@ const MerchantTable = () => {
           View All
         </motion.button>
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow className="border-b border-border">
-            <TableHead className="font-bold text-muted-foreground">Transaction ID</TableHead>
-            <TableHead className="font-bold text-muted-foreground">Buyer</TableHead>
-            <TableHead className="font-bold text-muted-foreground">Product</TableHead>
-            <TableHead className="font-bold text-muted-foreground">Amount</TableHead>
-            <TableHead className="font-bold text-muted-foreground">Status</TableHead>
-            <TableHead className="font-bold text-muted-foreground">Date</TableHead>
-            <TableHead className="font-bold text-muted-foreground">Action</TableHead>
-          </TableRow>
-        </TableHeader>
-        <motion.tbody
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={staggerContainer}
-        >
-          {merchantTable.map((merchant) => (
-            <motion.tr
-              key={merchant.taxID}
-              className="border-b border-border/60 transition-colors hover:bg-muted/30"
-              variants={staggerItem}
-            >
-              <TableCell className="font-semibold text-foreground py-4">{merchant.taxID}</TableCell>
-              <TableCell className="text-foreground">{merchant.buyer}</TableCell>
-              <TableCell className="text-muted-foreground">{merchant.product}</TableCell>
-              <TableCell className="text-foreground font-bold">{merchant.amount}</TableCell>
-              <TableCell>
-                {merchant.status.map((stat, index) => {
-                  const config = statusConfig[stat.stats];
-                  return (
-                    <span key={index} className={`inline-flex items-center py-1 px-3 rounded-full text-xs font-semibold ${config.text} ${config.border} ${config.bg}`}>
-                      {stat.stats}
+      
+      {transactions.length === 0 ? (
+        <p className="text-center text-muted-foreground text-sm py-8">No recent transactions found.</p>
+      ) : (
+        <Table>
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="font-bold text-muted-foreground">Transaction ID</TableHead>
+              <TableHead className="font-bold text-muted-foreground">Buyer</TableHead>
+              <TableHead className="font-bold text-muted-foreground">Product</TableHead>
+              <TableHead className="font-bold text-muted-foreground">Amount</TableHead>
+              <TableHead className="font-bold text-muted-foreground">Status</TableHead>
+              <TableHead className="font-bold text-muted-foreground">Date</TableHead>
+              <TableHead className="font-bold text-muted-foreground">Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <motion.tbody
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+          >
+            {transactions.map((tx) => {
+              const uiStatus = mapStatus(tx.status || "pending");
+              const config = statusConfig[uiStatus] || statusConfig.HELD;
+              const dateStr = tx.created_at
+                ? new Date(tx.created_at).toLocaleDateString("en-NG", { dateStyle: "medium" })
+                : "N/A";
+
+              return (
+                <motion.tr
+                  key={tx.id}
+                  className="border-b border-border/60 transition-colors hover:bg-muted/30"
+                  variants={staggerItem}
+                >
+                  <TableCell className="font-semibold text-foreground py-4">
+                    #{tx.id ? tx.id.slice(0, 8) : "N/A"}
+                  </TableCell>
+                  <TableCell className="text-foreground">
+                    Buyer #{tx.buyer_id ? tx.buyer_id.slice(0, 6) : "N/A"}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">{tx.description}</TableCell>
+                  <TableCell className="text-foreground font-bold">
+                    {formatCurrency(tx.amount || 0)}
+                  </TableCell>
+                  <TableCell>
+                    <span className={`inline-flex items-center py-1 px-3 rounded-full text-xs font-semibold ${config.text} ${config.border} ${config.bg}`}>
+                      {uiStatus}
                     </span>
-                  );
-                })}
-              </TableCell>
-              <TableCell className="text-muted-foreground text-sm">{merchant.date}</TableCell>
-              <TableCell className="cursor-pointer">
-                <Link href={`/merchants-dashboard/transactions/${merchant.taxID}`} className="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline">
-                  {merchant.action}
-                </Link>
-              </TableCell>
-            </motion.tr>
-          ))}
-        </motion.tbody>
-      </Table>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground text-sm">{dateStr}</TableCell>
+                  <TableCell className="cursor-pointer">
+                    <Link href={`/review-funds?transactionId=${tx.id}`} className="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline">
+                      View
+                    </Link>
+                  </TableCell>
+                </motion.tr>
+              );
+            })}
+          </motion.tbody>
+        </Table>
+      )}
     </div>
   );
 };
