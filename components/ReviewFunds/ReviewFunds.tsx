@@ -13,6 +13,10 @@ import {
   Loader2,
   AlertCircle,
   ShieldCheck,
+  Calendar,
+  DollarSign,
+  User,
+  Plus,
 } from "lucide-react";
 import Link from "next/link";
 import TransactionProgress from "../TransactionProgress";
@@ -28,9 +32,9 @@ import { createClient } from "@/lib/supabase/client";
 const ReviewFunds = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const transactionId = searchParams.get("transactionId");
   const { user } = useAuth();
 
+  const [transactionId, setTransactionId] = useState<string | null>(null);
   const [transaction, setTransaction] = useState<any>(null);
   const [milestones, setMilestones] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -44,9 +48,22 @@ const ReviewFunds = () => {
   const [disputeDesc, setDisputeDesc] = useState("");
   const [disputeSubmitting, setDisputeSubmitting] = useState(false);
 
+  // Detect transactionId from query string or URL path segments
+  useEffect(() => {
+    let id = searchParams.get("transactionId");
+    if (!id && typeof window !== "undefined") {
+      const parts = window.location.pathname.split("/");
+      const lastPart = parts[parts.length - 1];
+      if (lastPart && lastPart !== "transactions" && lastPart !== "review-funds") {
+        id = lastPart;
+      }
+    }
+    setTransactionId(id);
+  }, [searchParams]);
+
   useEffect(() => {
     if (!transactionId) {
-      setLoading(false);
+      if (loading) setLoading(false);
       return;
     }
 
@@ -193,17 +210,17 @@ const ReviewFunds = () => {
   if (!transaction) {
     return (
       <PageWrapper>
-        <>
+        <div className="bg-background text-foreground min-h-screen pb-12">
           <Nav />
           <div className="max-w-3xl mx-auto px-4 mt-25 text-center py-20">
             <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900">Transaction Not Found</h2>
+            <h2 className="text-2xl font-bold">Transaction Not Found</h2>
             <p className="text-muted-foreground mt-2">The requested transaction does not exist or you do not have permission to view it.</p>
             <Link href="/dashboard" className="inline-block mt-6 text-blue-600 font-bold hover:underline">
               Back to Dashboard
             </Link>
           </div>
-        </>
+        </div>
       </PageWrapper>
     );
   }
@@ -223,88 +240,90 @@ const ReviewFunds = () => {
 
   return (
     <PageWrapper>
-      <>
+      <div className="bg-background text-foreground min-h-screen pb-16">
         <Nav />
-        <div className="max-w-3xl mx-auto px-4 mt-25 space-y-4 my-2 text-foreground">
+        <div className="max-w-3xl mx-auto px-4 mt-24 space-y-6">
+          
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 text-[#6b7ea0] hover:text-black cursor-pointer my-5 text-sm font-semibold transition-colors"
+            className="flex items-center gap-2 text-sm font-semibold hover:text-primary transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Dashboard
           </Link>
 
           {message && (
-            <div className={`p-4 rounded-xl border flex items-start gap-2.5 text-sm font-semibold ${
+            <div className={`p-4 rounded-2xl border flex items-start gap-2.5 text-sm font-semibold ${
               message.type === "success" 
-                ? "bg-green-50 text-green-600 border-green-200" 
-                : "bg-red-50 text-red-600 border-red-200"
+                ? "bg-green-50 text-green-700 border-green-200" 
+                : "bg-red-50 text-red-700 border-red-200"
             }`}>
               {message.type === "success" ? <ShieldCheck className="w-5 h-5 shrink-0 mt-0.5" /> : <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />}
               <span>{message.text}</span>
             </div>
           )}
 
+          {/* Locked Status Banner */}
           <motion.div
-            className="w-full bg-[#fffcf0] dark:bg-amber-950/20 rounded-xl px-2 py-10 border-2 border-[#fee685] dark:border-amber-500/20 flex flex-col items-center justify-center text-center"
+            className="w-full bg-gradient-to-br from-amber-500/5 to-transparent border border-amber-500/10 p-8 rounded-3xl flex flex-col items-center justify-center text-center relative overflow-hidden"
             initial="hidden"
             animate="visible"
             variants={scaleIn}
           >
-            <div className="bg-[#df7f07] p-4 rounded-full text-white">
-              <Lock className="w-8 h-8" />
+            <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
+            
+            <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-2xl text-amber-600 dark:text-amber-500 mb-4">
+              <Lock className="w-7 h-7" />
             </div>
-            <motion.div
-              className={`rounded-full flex items-center justify-center gap-2 px-4 py-2 my-4 text-xs font-bold uppercase tracking-wider ${
-                transaction.status === "completed" 
-                  ? "bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-400 border border-green-200 dark:border-green-500/20"
-                  : transaction.status === "disputed"
-                  ? "bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-400 border border-red-200 dark:border-red-500/20"
-                  : "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20"
-              }`}
-              initial="hidden"
-              animate="visible"
-              variants={scaleIn}
-              transition={{ delay: 0.15 }}
-            >
-              <LockKeyhole className="w-4 h-4" />
-              <p>FUNDS {transaction.status || "HELD"}</p>
-            </motion.div>
-            <p className="text-gray-500 text-sm my-2">
+
+            <div className={`rounded-full flex items-center justify-center gap-2 px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest ${
+              transaction.status === "completed" 
+                ? "bg-green-50 text-green-700 border border-green-200"
+                : transaction.status === "disputed"
+                ? "bg-red-50 text-red-700 border border-red-200"
+                : "bg-amber-50 text-amber-700 border border-amber-200"
+            }`}>
+              <LockKeyhole className="w-3.5 h-3.5" />
+              <span>Vault Status: {transaction.status === "funds_locked" ? "FUNDS LOCKED" : (transaction.status || "HELD")}</span>
+            </div>
+
+            <p className="text-muted-foreground text-xs mt-3 max-w-md leading-relaxed">
               {transaction.status === "completed" 
                 ? "Funds have been successfully released to the seller." 
                 : transaction.status === "disputed"
-                ? "This transaction is currently in dispute. Support is reviewing."
-                : "Your money is safe and locked in escrow until milestones are approved."}
+                ? "This transaction is currently in dispute. Our support team is actively reviewing evidence."
+                : "Escrow secures these funds. Payment is only released as milestones are completed."}
             </p>
           </motion.div>
 
-          <TransactionProgress />
+          {/* Dynamic Progress Component */}
+          <TransactionProgress status={transaction.status} />
 
           {/* Milestones Section */}
           {milestones.length > 0 && (
             <motion.section
-              className="border border-border bg-card p-6 rounded-xl transition-colors duration-300"
+              className="border border-border bg-card p-6 rounded-3xl transition-colors duration-300 shadow-sm"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
               variants={staggerContainer}
             >
-              <h3 className="font-bold text-lg mb-4 text-foreground">Transaction Milestones</h3>
+              <h3 className="font-bold text-sm text-foreground uppercase tracking-wider text-muted-foreground mb-4">Milestone Tracker</h3>
               <div className="divide-y divide-border/60">
                 {milestones.map((m, index) => (
                   <motion.div key={m.id || index} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4" variants={staggerItem}>
                     <div>
-                      <p className="font-bold text-foreground text-base">{m.title}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">
+                      <p className="font-bold text-foreground text-sm">{m.title}</p>
+                      <p className="text-[10px] text-muted-foreground mt-0.5 flex items-center gap-1">
+                        <Calendar className="w-3.5 h-3.5" />
                         Due: {new Date(m.due_date).toLocaleDateString("en-NG", { dateStyle: "medium" })}
                       </p>
                     </div>
                     <div className="flex items-center gap-3 justify-between sm:justify-end">
-                      <span className="text-lg font-bold text-foreground mr-2">
+                      <span className="text-base font-black text-foreground mr-2">
                         {formatCurrency(m.amount || 0)}
                       </span>
-                      <span className={`text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border ${
+                      <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border ${
                         m.status === "completed"
                           ? "bg-green-50 text-green-700 border-green-200"
                           : "bg-amber-50 text-amber-700 border-amber-200"
@@ -312,13 +331,15 @@ const ReviewFunds = () => {
                         {m.status || "pending"}
                       </span>
                       {isBuyer && m.status === "pending" && transaction.status !== "completed" && (
-                        <button
+                        <motion.button
                           onClick={() => handleReleaseMilestone(m.id)}
                           disabled={actionLoading !== null}
-                          className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white text-xs font-bold py-2 px-3.5 rounded-xl cursor-pointer transition-colors"
+                          className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white text-[10px] font-bold py-1.5 px-3.5 rounded-xl cursor-pointer transition-colors shadow-sm"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
                         >
                           {actionLoading === m.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : "Release"}
-                        </button>
+                        </motion.button>
                       )}
                     </div>
                   </motion.div>
@@ -329,27 +350,27 @@ const ReviewFunds = () => {
 
           {/* Transaction Details */}
           <motion.section
-            className="border border-border bg-card p-6 rounded-xl transition-colors duration-300"
+            className="border border-border bg-card p-6 rounded-3xl transition-colors duration-300 shadow-sm"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={staggerContainer}
           >
-            <p className="font-bold text-lg mb-4 text-foreground">Transaction Details</p>
-            <div>
+            <h3 className="font-bold text-sm text-foreground uppercase tracking-wider text-muted-foreground mb-4">Transaction Details</h3>
+            <div className="space-y-4">
               {transactionDetails.map((details, index) => (
-                <motion.div key={index} className="my-4" variants={staggerItem}>
-                  <div className="flex items-center justify-between my-2">
-                    <p className="text-gray-500 text-sm">{details.details1}</p>
-                    <p className="font-semibold text-sm">{details.details2}</p>
+                <motion.div key={index} variants={staggerItem}>
+                  <div className="flex items-center justify-between text-xs py-1">
+                    <p className="text-muted-foreground">{details.details1}</p>
+                    <p className="font-bold text-foreground text-right max-w-[240px] truncate">{details.details2}</p>
                   </div>
-                  <div className="w-full h-[0.5px] bg-border/60" />
+                  <div className="w-full h-[1px] bg-border/40 mt-3" />
                 </motion.div>
               ))}
             </div>
           </motion.section>
 
-          {/* Action buttons — staggered */}
+          {/* Action buttons */}
           <motion.div
             className="flex flex-col gap-4"
             initial="hidden"
@@ -359,16 +380,16 @@ const ReviewFunds = () => {
           >
             {isBuyer && transaction.status !== "completed" && (
               <motion.section
-                className="border border-green-500/20 bg-green-500/5 p-6 rounded-xl"
+                className="border border-green-500/15 bg-green-500/5 p-6 rounded-3xl"
                 variants={fadeUp}
               >
                 <div className="flex items-start gap-3">
-                  <div className="bg-green-100 p-2 rounded-xl text-green-600">
+                  <div className="bg-green-500/10 p-2.5 rounded-xl text-green-600 border border-green-500/20">
                     <CircleCheck className="w-5 h-5" />
                   </div>
                   <div>
-                    <h6 className="font-semibold text-foreground">Ready to Release All Payments?</h6>
-                    <p className="text-muted-foreground text-sm mt-0.5">
+                    <h6 className="font-bold text-sm text-foreground">Ready to Release All Payments?</h6>
+                    <p className="text-muted-foreground text-xs mt-0.5">
                       If the full job/order is finished and verified, you can release all remaining escrow funds.
                     </p>
                   </div>
@@ -376,7 +397,7 @@ const ReviewFunds = () => {
                 <motion.button
                   onClick={handleReleaseAll}
                   disabled={actionLoading !== null}
-                  className="w-full bg-[#1f55de] hover:bg-[#1642ad] text-white rounded-xl flex items-center justify-center gap-2 p-3.5 mt-4 hover:shadow-xl font-bold cursor-pointer transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-2xl flex items-center justify-center gap-2 py-3.5 mt-4 hover:shadow-lg font-bold cursor-pointer transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-xs border border-blue-500/20"
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -384,7 +405,7 @@ const ReviewFunds = () => {
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
                     <>
-                      <CircleCheck className="w-5 h-5" />
+                      <CircleCheck className="w-4 h-4" />
                       Release All Funds
                     </>
                   )}
@@ -393,30 +414,42 @@ const ReviewFunds = () => {
             )}
 
             <motion.section
-              className="border border-border bg-card rounded-xl p-6 hover:shadow-xl transition-all duration-300"
+              className="border border-border bg-card rounded-3xl p-6 hover:shadow-md transition-all duration-300 group"
               variants={fadeUp}
             >
               <button
                 onClick={() => window.open(`mailto:${transaction.seller_email}`)}
                 className="w-full flex items-center justify-between gap-2 cursor-pointer"
               >
-                <div className="flex items-center gap-2 text-foreground font-semibold">
+                <div className="flex items-center gap-2.5 text-foreground font-bold text-xs uppercase tracking-wider">
                   <MessageSquare className="text-blue-500 w-5 h-5" />
-                  <p>Message Seller ({transaction.seller_email})</p>
+                  <span>Message Partner ({transaction.seller_email})</span>
                 </div>
-                <MoveRight className="w-4 h-4 text-gray-400" />
+                <MoveRight className="w-4 h-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
               </button>
             </motion.section>
 
             {isBuyer && transaction.status !== "completed" && transaction.status !== "disputed" && (
-              <motion.section className="hover:bg-red-500/5 rounded-xl p-4 text-center transition-colors" variants={fadeUp}>
+              <motion.section className="hover:bg-red-500/5 rounded-2xl p-4 text-center transition-colors" variants={fadeUp}>
                 <button
                   onClick={() => setIsDisputeOpen(true)}
-                  className="flex items-center justify-center gap-2 text-[#f04444] font-bold w-full cursor-pointer"
+                  className="flex items-center justify-center gap-2 text-red-500 font-bold w-full cursor-pointer text-xs uppercase tracking-wider"
                 >
                   <TriangleAlert className="w-4 h-4" />
-                  <p>Open Dispute</p>
+                  <span>File/Open Dispute</span>
                 </button>
+              </motion.section>
+            )}
+            
+            {transaction.status === "disputed" && (
+              <motion.section className="hover:bg-red-500/5 rounded-2xl p-4 text-center transition-colors" variants={fadeUp}>
+                <Link
+                  href={`/dispute-resolution?transactionId=${transaction.id}`}
+                  className="flex items-center justify-center gap-2 text-red-500 font-bold w-full cursor-pointer text-xs uppercase tracking-wider animate-pulse"
+                >
+                  <TriangleAlert className="w-4 h-4" />
+                  <span>Go to Dispute resolution board</span>
+                </Link>
               </motion.section>
             )}
           </motion.div>
@@ -425,14 +458,14 @@ const ReviewFunds = () => {
         {/* Dispute Modal */}
         <AnimatePresence>
           {isDisputeOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="bg-card text-foreground rounded-2xl shadow-xl max-w-md w-full border border-border p-6 relative"
+                className="bg-card text-foreground rounded-3xl shadow-xl max-w-md w-full border border-border p-6 relative"
               >
-                <h3 className="font-bold text-xl mb-4 text-foreground flex items-center gap-2 text-red-600">
+                <h3 className="font-bold text-lg mb-4 text-red-600 flex items-center gap-2">
                   <TriangleAlert className="w-5 h-5" /> Open Dispute
                 </h3>
                 <form onSubmit={handleOpenDispute} className="space-y-4">
@@ -492,7 +525,7 @@ const ReviewFunds = () => {
             </div>
           )}
         </AnimatePresence>
-      </>
+      </div>
     </PageWrapper>
   );
 };

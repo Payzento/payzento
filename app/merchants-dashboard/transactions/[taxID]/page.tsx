@@ -1,10 +1,10 @@
-import Transactions from '@/components/Merchant-Dashboard/Transactions'
+import ReviewFunds from '@/components/ReviewFunds/ReviewFunds'
 import React from 'react'
 
 const page = () => {
   return (
     <div>
-      <Transactions /> 
+      <ReviewFunds />
     </div>
   )
 }

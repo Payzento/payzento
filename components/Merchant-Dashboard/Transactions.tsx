@@ -8,34 +8,22 @@ import TransactionProgress from "../TransactionProgress";
 
 type TransactionProps = {
   id: number;
-  // amount: string;
   amount2: number;
-  // seller: string;
   seller2: string;
-  // product: string;
   product2: string;
-  // desc: string;
   desc2: string;
-  // escrowFee: string;
   escrowFee2: number;
-  // total: string;
   total2: number;
 };
 
 const transactioDetails: TransactionProps[] = [
   {
     id: 1,
-    // amount: "Amount",
     amount2: 125000,
-    // seller: "Seller",
     seller2: "Adewale Graphics",
-    // product: "Product",
     product2: "Premium web design",
-    // desc: "Description",
     desc2: "Professional website design service",
-    // escrowFee: "Escrow Fee(2%)",
     escrowFee2: 2500,
-    // total: "Total Paid",
     total2: 127500,
   },
 ];
@@ -45,7 +33,7 @@ const Transactions = () => {
     <div>
       <Nav />
 
-      <div className="max-w-6xl mx-auto mt-25  px-4">
+      <div className="max-w-6xl mx-auto mt-25 px-4">
         <Link href="/merchants-dashboard">
           <button className="flex items-center gap-2 text-gray-500 hover:text-black mb-7">
             <ArrowLeftIcon className="w-4 h-4" />
@@ -73,7 +61,7 @@ const Transactions = () => {
 
         {/* TRANSACTION PROGRESS */}
         <div className="">
-          <TransactionProgress />
+          <TransactionProgress status="active" />
         </div>
 
         <div className="flex flex-col md:flex-row items-start justify-between gap-4 my-5">
