@@ -7,7 +7,9 @@ export async function createTransaction(data: any, buyerId: string) {
   const supabase = await createServerSupabaseClient();
   const koboAmount = Math.round((data.amount || 0) * 100);
 
-  // 1. Check buyer wallet has enough available balance
+  const isCard = data.paymentMethod === "card";
+
+  // 1. Check buyer wallet has enough available balance (only if not paying by card)
   const { data: wallet, error: walletError } = await supabase
     .from("wallets")
     .select("*")
@@ -17,7 +19,7 @@ export async function createTransaction(data: any, buyerId: string) {
   const available = wallet ? Number(wallet.available_balance) : 0;
   const locked = wallet ? Number(wallet.locked_balance) : 0;
 
-  if (available < koboAmount) {
+  if (!isCard && available < koboAmount) {
     throw new Error("Insufficient wallet balance to fund this transaction.");
   }
 
@@ -61,11 +63,14 @@ export async function createTransaction(data: any, buyerId: string) {
   }
 
   // 4. Update buyer wallet using admin client to bypass RLS
+  const newAvailable = isCard ? available : (available - koboAmount);
+  const newLocked = locked + koboAmount;
+
   const { error: updateError } = await supabaseAdmin
     .from("wallets")
     .update({
-      available_balance: available - koboAmount,
-      locked_balance: locked + koboAmount,
+      available_balance: newAvailable,
+      locked_balance: newLocked,
       updated_at: new Date().toISOString()
     })
     .eq("user_id", buyerId);
