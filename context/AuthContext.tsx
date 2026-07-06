@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
 import { SignupFormData } from "./SignupFormContext";
+import { createUserProfileAndWallet } from "@/lib/services/profile.service";
 
 const supabase = createClient();
 
@@ -166,18 +167,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (error) throw error;
     if (!authData.user) throw new Error("Signup failed");
 
-    // Insert user profile into public.user_profiles
-    const { error: profileError } = await supabase.from("user_profiles").insert({
+    // Insert user profile and initialize wallet via server action to bypass RLS
+    await createUserProfileAndWallet({
       id: authData.user.id,
-      first_name: data.firstName,
-      last_name: data.lastName,
+      firstName: data.firstName,
+      lastName: data.lastName,
       email: data.email,
       phone: data.phone,
-      account_type: data.accountType,
-      kyc_status: "pending",
+      accountType: data.accountType,
     });
-
-    if (profileError) throw profileError;
 
     setUser(authData.user);
     setUserProfile({
