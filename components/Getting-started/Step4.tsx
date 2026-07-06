@@ -3,36 +3,40 @@
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useSignupForm } from "@/context/SignupFormContext";
+import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, AlertCircle } from "lucide-react";
 
 export const Step4 = () => {
   const router = useRouter();
   const { formData, updateFormData } = useSignupForm();
+  const { signUp } = useAuth();
   const [showToast, setShowToast] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.agreedToTerms) return;
 
+    setError("");
     setIsSubmitting(true);
 
-    // Log complete form data as required by spec
-    console.log("SignupFormData:", {
-      accountType: formData.accountType,
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      phone: formData.phone,
-      password: formData.password,
-      confirmPassword: formData.confirmPassword,
-      agreedToTerms: formData.agreedToTerms,
-    });
-
-    setShowToast(true);
-    await new Promise((resolve) => setTimeout(resolve, 1200));
-    router.push("/dashboard");
+    try {
+      await signUp(formData);
+      setShowToast(true);
+      setTimeout(() => {
+        if (formData.accountType === "merchant") {
+          router.push("/merchant-page");
+        } else {
+          router.push("/dashboard");
+        }
+      }, 1200);
+    } catch (err: any) {
+      console.error(err);
+      setError(err?.message || "An error occurred during signup");
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -103,6 +107,13 @@ export const Step4 = () => {
           </span>
         </div>
       </div>
+
+      {error && (
+        <div className="p-3 mb-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-xs flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 flex-shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Terms checkbox — must be checked to enable submit */}

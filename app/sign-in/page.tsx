@@ -10,8 +10,11 @@ import { motion } from "framer-motion";
 import PageWrapper from "@/components/PageWrapper";
 import { scaleIn, staggerContainer, staggerItem, fadeUp } from "@/lib/animations";
 import { useAuth } from "@/context/AuthContext";
+import { createClient } from "@/lib/supabase/client";
 import { ShieldCheck, ShieldAlert, Sparkles, ChevronLeft } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
+
+const supabase = createClient();
 
 const schema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -40,9 +43,23 @@ const SignIn = () => {
     setIsSubmitting(true);
     try {
       await signIn(data.email, data.password);
-      setTimeout(() => {
+      
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data: profile } = await supabase
+          .from("user_profiles")
+          .select("account_type")
+          .eq("id", session.user.id)
+          .single();
+
+        if (profile?.account_type === "merchant") {
+          router.push("/merchants-dashboard");
+        } else {
+          router.push("/dashboard");
+        }
+      } else {
         router.push("/dashboard");
-      }, 500);
+      }
     } catch (err: any) {
       console.error(err);
       setError("Invalid email or password");
@@ -54,9 +71,6 @@ const SignIn = () => {
     setError("");
     try {
       await signInWithGoogle();
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 500);
     } catch (err: any) {
       console.error(err);
       setError("Google sign in failed");
