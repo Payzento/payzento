@@ -8,7 +8,7 @@ import TransactionDetailsStep from "./TransactionDetailsStep";
 import AddSellersStep from "./AddSellersStep";
 import PaymentMethodStep from "./PaymentMethodStep";
 import ConfirmTransactions from "./ConfirmTransactions";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import PageWrapper from "@/components/PageWrapper";
 import { slideInRight, slideInLeft } from "@/lib/animations";
 import { useRef, useState } from "react";
@@ -36,14 +36,14 @@ const NewTransaction = () => {
 
   return (
     <PageWrapper>
-      <div>
+      <div className="bg-background text-foreground min-h-screen pb-16 transition-colors duration-300">
         <Nav />
-        <div className="w-full bg-gray-50 overflow-hidden min-h-[70%]">
-          <div className="w-full max-w-2xl mx-auto pt-20 overflow-hidden">
+        <div className="w-full">
+          <div className="w-full max-w-xl mx-auto pt-24 px-4 sm:px-6">
             <motion.button
-              className="w-full flex items-center gap-2 text-left my-8"
+              className="flex items-center gap-2 text-sm font-semibold hover:text-primary cursor-pointer mb-6"
               onClick={handleGoBack}
-              whileHover={{ opacity: 0.75 }}
+              whileHover={{ x: -2 }}
               transition={{ duration: 0.15 }}
             >
               <ArrowLeft className="w-4 h-4" />
@@ -59,9 +59,10 @@ const NewTransaction = () => {
               ]}
               currentStep={currentStep}
               setCurrentStep={handleSetStep}
-              className=""
-              className2="h-1 flex-1 rounded-full"
-              renderStepIndicator={({ isCompleted }) => (isCompleted ? null : null)}
+              className="w-full flex items-center justify-between relative gap-4"
+              className2="w-10 h-10 rounded-2xl flex items-center justify-center text-xs font-bold z-10 border border-border shadow-sm"
+              className3="absolute top-[19px] left-10 right-0 h-[2px] -z-10"
+              stepLabels={["Details", "Seller", "Escrow", "Confirm"]}
               stepSlideVariant={slideVariant}
             />
           </div>

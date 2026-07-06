@@ -23,8 +23,14 @@ const TransactionDetailsStep = ({ onNext }: TransactionProps) => {
     register,
     handleSubmit,
     formState: { errors, isValid },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } = useForm<Step1Data>({ resolver: zodResolver(stepSchema) as any, mode: "onChange", defaultValues: { amount: formData.amount ?? undefined, description: formData.description } });
+  } = useForm<Step1Data>({
+    resolver: zodResolver(stepSchema) as any,
+    mode: "onChange",
+    defaultValues: {
+      amount: formData.amount ?? undefined,
+      description: formData.description,
+    },
+  });
 
   const onSubmit = (data: Step1Data) => {
     updateFormData(data);
@@ -32,57 +38,57 @@ const TransactionDetailsStep = ({ onNext }: TransactionProps) => {
   };
 
   return (
-    <div className="w-full bg-white border rounded-lg shadow-md p-6">
-      <h1 className="text-2xl font-semibold mb-4">Transaction Details</h1>
+    <div className="w-full bg-card border border-border rounded-3xl p-6 sm:p-8 shadow-sm">
+      <h2 className="text-xl font-bold tracking-tight text-foreground mb-1">Transaction Details</h2>
+      <p className="text-xs text-muted-foreground mb-6">Enter the amount to lock in escrow and describe your transaction.</p>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
-        <div className="flex flex-col mb-4">
-          <label htmlFor="amount" className="text-sm font-semibold mb-2">
-            Amount
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <div className="flex flex-col">
+          <label htmlFor="amount" className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
+            Amount (NGN)
           </label>
           <input
             id="amount"
             type="text"
             placeholder="₦ 0.00"
-            className="h-12 p-4 border focus:outline-2 focus:outline-blue-400 rounded-xl transition-all duration-200"
+            className="h-12 px-4 border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 rounded-xl transition-all duration-200 text-sm font-semibold"
             {...register("amount")}
           />
           {errors.amount && (
-            <p className="text-red-500 text-sm mt-1">{errors.amount.message}</p>
+            <p className="text-red-500 text-xs mt-1 font-semibold">{errors.amount.message}</p>
           )}
         </div>
 
-        <div className="flex flex-col mb-4">
-          <label htmlFor="description" className="text-sm font-semibold mb-2">
-            Description
+        <div className="flex flex-col">
+          <label htmlFor="description" className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
+            Description / Deliverable Terms
           </label>
           <input
             id="description"
             type="text"
             placeholder="What is this payment for?"
-            className="h-12 p-4 border focus:outline-2 focus:outline-blue-400 rounded-xl transition-all duration-200"
+            className="h-12 px-4 border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 rounded-xl transition-all duration-200 text-sm font-semibold"
             {...register("description")}
           />
           {errors.description && (
-            <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>
+            <p className="text-red-500 text-xs mt-1 font-semibold">{errors.description.message}</p>
           )}
         </div>
 
-        <div className="flex items-center gap-2 bg-[#eff6ff] border border-[#8fa9ee] rounded-xl p-4">
-          <Lightbulb className="w-4" />
-          <p className="text-sm">
-            <span className="font-bold">Your money is safe:</span> Payment will
-            be locked until you approve its release
+        <div className="flex items-start gap-2.5 bg-blue-500/5 border border-blue-500/10 rounded-2xl p-4">
+          <Lightbulb className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            <span className="font-bold text-foreground">Your money is safe:</span> Payment will be locked securely in escrow until you verify work and approve its release.
           </p>
         </div>
 
         <button
           type="submit"
           disabled={!isValid}
-          className="flex items-center justify-center gap-2 bg-[#2057e0] hover:shadow-2xl text-white font-semibold p-3.5 rounded-xl mt-5 cursor-pointer disabled:bg-[#8fa9ee] disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-2 bg-[#2057e0] hover:bg-[#1642ad] text-white font-bold p-3.5 rounded-2xl mt-6 cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed text-xs uppercase tracking-wider border border-blue-500/20 shadow-sm"
         >
           Continue
-          <ArrowRight className="w-4" />
+          <ArrowRight className="w-4 h-4" />
         </button>
       </form>
     </div>
