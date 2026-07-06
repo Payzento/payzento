@@ -15,7 +15,7 @@ export async function GET(request: Request) {
         .from('user_profiles')
         .select('account_type')
         .eq('id', data.user.id)
-        .single()
+        .maybeSingle()
 
       const targetPath = profile?.account_type === 'merchant' ? '/merchants-dashboard' : '/dashboard'
       return NextResponse.redirect(`${origin}${targetPath}`)

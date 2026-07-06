@@ -50,7 +50,7 @@ const SignIn = () => {
           .from("user_profiles")
           .select("account_type")
           .eq("id", session.user.id)
-          .single();
+          .maybeSingle();
 
         if (profile?.account_type === "merchant") {
           router.push("/merchants-dashboard");
